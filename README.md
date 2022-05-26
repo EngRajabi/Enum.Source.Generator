@@ -22,6 +22,8 @@ public enum UserType
     Men,
 
     Women,
+
+    None
 }
 ```
 
@@ -79,3 +81,7 @@ Create an [issue](https://github.com/EngRajabi/Enum.Source.Generator/issues/new)
 ## Give a Star! ⭐️
 
 If you find this repository useful, please give it a star. Thanks!
+
+## License
+
+Supernova.Enum.Generators is Copyright © 2022 [Mohsen Rajabi](https://github.com/EngRajabi) under the MIT License.
