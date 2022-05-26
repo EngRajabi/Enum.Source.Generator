@@ -14,10 +14,10 @@
       CA1054: Change the type of parameter of the method to allow a Uri to be passed as a 'System.Uri' object
       CA1055: Change the return type of method from 'string' to 'System.Uri'
     -->
-        <NoWarn>$(NoWarn);SCS0004;CA1716;CA2227;CA1002;MA0025;</NoWarn>
-        <NoError>$(NoError);SCS0004;CA1716;CA2227;CA1002;MA0025;</NoError>
+        <NoWarn>$(NoWarn);SCS0004;CA1716;CA2227;CA1002;MA0025;MA0051;MA0002;</NoWarn>
+        <NoError>$(NoError);SCS0004;CA1716;CA2227;CA1002;MA0025;MA0051;MA0002;</NoError>
         <ReportAnalyzer>true</ReportAnalyzer>
-        <AnalysisMode>All</AnalysisMode>
+        <AnalysisMode>Default</AnalysisMode>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
 
         <Company>Mohsen Rajabi</Company>
@@ -31,28 +31,6 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-
-        <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.3">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-
-        <PackageReference Include="Meziantou.Analyzer" Version="1.0.702">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-
-        
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-
-        
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

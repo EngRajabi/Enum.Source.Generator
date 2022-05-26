@@ -28,5 +28,9 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Supernova.Enum.Generators\Supernova.Enum.Generators.csproj" />
+    </ItemGroup>
+
 
 </Project>
