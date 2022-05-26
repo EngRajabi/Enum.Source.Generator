@@ -17,7 +17,7 @@ To use the generator, add the `[EnumGenerator]` attribute to an enum. For exampl
 
 ```csharp
 [EnumGenerator]
-public enum UserType
+public enum UserTypeTest
 {
     Men,
 
