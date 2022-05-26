@@ -1,5 +1,6 @@
 ﻿using EnumFastToStringGenerated;
-namespace Console.Test;
+
+namespace Console.Test.Benchmark;
 
 
 [EnumGenerator]
@@ -21,5 +22,7 @@ public class Program
     {
         var state = UserType.Men;
         var ff = state.StringToFast();
+
+        var ggg = UserTypeEnumExtensions.IsDefined("Men");
     }
 }

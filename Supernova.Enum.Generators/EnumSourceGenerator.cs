@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -17,18 +18,21 @@ public class EnumSourceGenerator : ISourceGenerator
 
     public void Execute(GeneratorExecutionContext context)
     {
+//#if DEBUG
+//        if (!Debugger.IsAttached)
+//        {
+//            Debugger.Launch();
+//        }
+//#endif 
         context.AddSource($"{SourceGeneratorHelper.AttributeName}Attribute.g.cs", SourceText.From($@"using System;
 namespace {SourceGeneratorHelper.NameSpace}
 {{
     [AttributeUsage(AttributeTargets.Enum)]
-    public class {SourceGeneratorHelper.AttributeName}Attribute : Attribute
+    public sealed class {SourceGeneratorHelper.AttributeName}Attribute : Attribute
     {{
     }}
 }}
 ", Encoding.UTF8));
-
-        //context.AddSource(
-        //    "EnumGeneratorAttribute.g.cs", SourceText.From(SourceGeneratorHelper.Attribute, Encoding.UTF8));
 
         var enums = new List<EnumDeclarationSyntax>();
 
@@ -44,11 +48,6 @@ namespace {SourceGeneratorHelper.NameSpace}
         }
 
 
-        var sourceBuilder = new StringBuilder($@"using System;
-namespace {SourceGeneratorHelper.NameSpace}
-{{
-    public static class EnumExtensions
-    {{");
         foreach (var e in enums)
         {
             var semanticModel = context.Compilation.GetSemanticModel(e.SyntaxTree);
@@ -59,16 +58,23 @@ namespace {SourceGeneratorHelper.NameSpace}
                 .FirstOrDefault(x => string.Equals(x.AttributeClass.Name, SourceGeneratorHelper.AttributeName,
                     StringComparison.OrdinalIgnoreCase));
             var argumentList = ((AttributeSyntax)attribute.ApplicationSyntaxReference.GetSyntax()).ArgumentList;
-            var methodName = argumentList != null
-                ? argumentList.Arguments
-                    .Where(x => string.Equals(x.NameEquals.Name.Identifier.Text, "MethodName",
-                        StringComparison.OrdinalIgnoreCase))
-                    .Select(x => semanticModel.GetConstantValue(x.Expression).ToString())
-                    .DefaultIfEmpty(SourceGeneratorHelper.ExtensionMethodName).First()
-                : SourceGeneratorHelper.ExtensionMethodName;
+            //var methodName = argumentList != null
+            //    ? argumentList.Arguments
+            //        .Where(x => string.Equals(x.NameEquals.Name.Identifier.Text, "MethodName",
+            //            StringComparison.OrdinalIgnoreCase))
+            //        .Select(x => semanticModel.GetConstantValue(x.Expression).ToString())
+            //        .DefaultIfEmpty(SourceGeneratorHelper.ExtensionMethodName).First()
+            //    : SourceGeneratorHelper.ExtensionMethodName;
 
+            var sourceBuilder = new StringBuilder($@"using System;
+namespace {SourceGeneratorHelper.NameSpace}
+{{
+    public static class {symbol.Name}EnumExtensions
+    {{");
+
+            //ToStringFast
             sourceBuilder.Append($@"
-        public static string {methodName}(this {symbolName} states)
+        public static string {SourceGeneratorHelper.ExtensionMethodNameToString}(this {symbolName} states)
         {{
             return states switch
             {{
@@ -79,12 +85,44 @@ namespace {SourceGeneratorHelper.NameSpace}
                 @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }");
-        }
 
-        sourceBuilder.Append(@"
+
+            //IsDefined enum
+            sourceBuilder.Append($@"
+        public static bool {SourceGeneratorHelper.ExtensionMethodNameIsDefined}({symbolName} states)
+        {{
+            return states switch
+            {{
+");
+            foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+                sourceBuilder.AppendLine($@"                {symbolName}.{member} => true,");
+            sourceBuilder.Append(
+                @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            };
+        }");
+
+
+            //IsDefined string
+            sourceBuilder.Append($@"
+        public static bool {SourceGeneratorHelper.ExtensionMethodNameIsDefined}(string states)
+        {{
+            return states switch
+            {{
+");
+            foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+                sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}) => true,");
+            sourceBuilder.Append(
+                @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            };
+        }");
+
+            sourceBuilder.Append(@"
     }
 }
 ");
-        context.AddSource("FastToStringGenerated", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
+            context.AddSource($"{symbol.Name}_EnumGenerator.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
+
+        }
+
     }
 }

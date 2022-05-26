@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "test\UnitTests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Supernova.Enum.Generators", "Supernova.Enum.Generators\Supernova.Enum.Generators.csproj", "{88902DA0-F625-4674-BE00-F363A785E4A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console.Test", "Console.Test\Console.Test.csproj", "{ACE5DD7B-9F53-401C-8589-412FE473563D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console.Test.Benchmark", "Console.Test\Console.Test.Benchmark.csproj", "{ACE5DD7B-9F53-401C-8589-412FE473563D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
