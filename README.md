@@ -1,4 +1,5 @@
 # Supernova.Enum.Generators
+# C# Better Enums Source Generator
 A C# source generator to create an enumeration class from an enum type.
 With this package, you can work on enums very, very fast without using reflection.
 
