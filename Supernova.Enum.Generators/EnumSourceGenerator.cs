@@ -17,7 +17,6 @@ public class EnumSourceGenerator : ISourceGenerator
 
     public void Execute(GeneratorExecutionContext context)
     {
-
         context.AddSource($"{SourceGeneratorHelper.AttributeName}Attribute.g.cs", SourceText.From($@"using System;
 namespace {SourceGeneratorHelper.NameSpace}
 {{
