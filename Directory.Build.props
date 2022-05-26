@@ -7,6 +7,7 @@
         <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+
         <!--
       CA2007: Consider calling ConfigureAwait on the awaited task
       MA0004: Use Task.ConfigureAwait(false) as the current SynchronizationContext is not needed
@@ -41,8 +42,9 @@
         <RepositoryUrl>https://github.com/EngRajabi/Enum.Source.Generator</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+        <PackageId>Supernova.Enum.Generators</PackageId>
         <!--<PackageIcon>Aspcore-Dapper-Extensions.png</PackageIcon>-->
 
         <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
