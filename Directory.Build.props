@@ -23,8 +23,40 @@
         <Company>Mohsen Rajabi</Company>
         <Copyright>MohsenRajabi@2022</Copyright>
         <Authors>Mohsen Rajabi</Authors>
+
+        <Version>1.0.0</Version>
+        <PackageVersion>1.0.0</PackageVersion>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+
+
+        <Description>
+            A package for easy use of dapper in aspcore that needs to be used very simply. asp core dapper(micro orm) extensions
+        </Description>
+        <PackageTags>
+            enums enum codegenerator codegeneration code-generator sourcegenerator source-generator sourcegenerators source-generators
+            codegenerators code-generators fastenum fast-enum codegen generator generators
+        </PackageTags>
+
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/EngRajabi/Enum.Source.Generator</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/EngRajabi/Enum.Source.Generator</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <!--<PackageIcon>Aspcore-Dapper-Extensions.png</PackageIcon>-->
+
+        <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
     </PropertyGroup>
 
+
+    <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
             <PrivateAssets>all</PrivateAssets>
@@ -36,6 +68,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
     </ItemGroup>
 
     <ItemGroup>
