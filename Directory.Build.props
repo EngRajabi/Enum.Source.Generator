@@ -41,10 +41,7 @@
         <PackageProjectUrl>https://github.com/EngRajabi/Enum.Source.Generator</PackageProjectUrl>
         <RepositoryUrl>https://github.com/EngRajabi/Enum.Source.Generator</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
-        <PackageId>Supernova.Enum.Generators</PackageId>
         <!--<PackageIcon>Aspcore-Dapper-Extensions.png</PackageIcon>-->
 
         <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->

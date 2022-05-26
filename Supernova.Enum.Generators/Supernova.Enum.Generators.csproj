@@ -2,6 +2,9 @@
 
   <PropertyGroup>
       <TargetFramework>netstandard2.0</TargetFramework>
+      <PackageId>Supernova.Enum.Generators</PackageId>
+      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+      <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
     <ItemGroup>
