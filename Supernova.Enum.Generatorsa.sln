@@ -12,18 +12,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		AssemblyInfo.cs = AssemblyInfo.cs
 		BannedSymbols.txt = BannedSymbols.txt
-		build.bat = build.bat
 		Directory.Build.props = Directory.Build.props
-		Dockerfile = Dockerfile
 		global.json = global.json
-		nuget.config = nuget.config
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "test\IntegrationTests\IntegrationTests.csproj", "{9AC0BD3F-4119-4B9D-95C4-142081EDE1E7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "test\UnitTests\UnitTests.csproj", "{28CEBA67-8F05-4377-8049-3439CB6978CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Supernova.Enum.Generators", "Supernova.Enum.Generators\Supernova.Enum.Generators.csproj", "{88902DA0-F625-4674-BE00-F363A785E4A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Supernova.Enum.Generators", "Supernova.Enum.Generators\Supernova.Enum.Generators.csproj", "{88902DA0-F625-4674-BE00-F363A785E4A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
