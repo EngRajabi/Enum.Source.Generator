@@ -1,4 +1,4 @@
-# Supernova.Enum.Generators
+﻿# Supernova.Enum.Generators
 # C# Better Enums Source Generator
 A C# source generator to create an enumeration class from an enum type.
 With this package, you can work on enums very, very fast without using reflection.
@@ -62,3 +62,20 @@ This will generate a class called `MyEnumExtensions` (by default), which contain
         }
     }
 ```
+
+Benchmark
+![Benchmark](Supernova.Enum.Generators.png)
+
+## Contributing
+
+Create an [issue](https://github.com/EngRajabi/Enum.Source.Generator/issues/new) if you find a BUG or have a Suggestion or Question. If you want to develop this project :
+
+1. Fork it!
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request
+
+## Give a Star! ⭐️
+
+If you find this repository useful, please give it a star. Thanks!
