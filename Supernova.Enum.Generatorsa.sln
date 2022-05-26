@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A60E376C-0437-4383-80A1-0F444BAF5056}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{360CDEDF-49F8-486D-9A78-001C2D875DC5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ED0FBF28-B700-4E39-AA8A-4F9553E99351}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		AssemblyInfo.cs = AssemblyInfo.cs
+		BannedSymbols.txt = BannedSymbols.txt
+		build.bat = build.bat
+		Directory.Build.props = Directory.Build.props
+		Dockerfile = Dockerfile
+		global.json = global.json
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "test\IntegrationTests\IntegrationTests.csproj", "{9AC0BD3F-4119-4B9D-95C4-142081EDE1E7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "test\UnitTests\UnitTests.csproj", "{28CEBA67-8F05-4377-8049-3439CB6978CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Supernova.Enum.Generators", "Supernova.Enum.Generators\Supernova.Enum.Generators.csproj", "{88902DA0-F625-4674-BE00-F363A785E4A7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9AC0BD3F-4119-4B9D-95C4-142081EDE1E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AC0BD3F-4119-4B9D-95C4-142081EDE1E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AC0BD3F-4119-4B9D-95C4-142081EDE1E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AC0BD3F-4119-4B9D-95C4-142081EDE1E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28CEBA67-8F05-4377-8049-3439CB6978CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28CEBA67-8F05-4377-8049-3439CB6978CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28CEBA67-8F05-4377-8049-3439CB6978CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28CEBA67-8F05-4377-8049-3439CB6978CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88902DA0-F625-4674-BE00-F363A785E4A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88902DA0-F625-4674-BE00-F363A785E4A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88902DA0-F625-4674-BE00-F363A785E4A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88902DA0-F625-4674-BE00-F363A785E4A7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9AC0BD3F-4119-4B9D-95C4-142081EDE1E7} = {360CDEDF-49F8-486D-9A78-001C2D875DC5}
+		{28CEBA67-8F05-4377-8049-3439CB6978CE} = {360CDEDF-49F8-486D-9A78-001C2D875DC5}
+		{88902DA0-F625-4674-BE00-F363A785E4A7} = {A60E376C-0437-4383-80A1-0F444BAF5056}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {89B80459-89FC-4D46-AC8C-50DD80B99D18}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,67 @@
+<Project>
+    <PropertyGroup>
+        <LangVersion>10.0</LangVersion>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <!--
+      CA2007: Consider calling ConfigureAwait on the awaited task
+      MA0004: Use Task.ConfigureAwait(false) as the current SynchronizationContext is not needed
+      CA1056: Change the type of property 'Url' from 'string' to 'System.Uri'
+      CA1054: Change the type of parameter of the method to allow a Uri to be passed as a 'System.Uri' object
+      CA1055: Change the return type of method from 'string' to 'System.Uri'
+    -->
+        <NoWarn>$(NoWarn);SCS0004;CA1716;CA2227;CA1002;MA0025;</NoWarn>
+        <NoError>$(NoError);SCS0004;CA1716;CA2227;CA1002;MA0025;</NoError>
+        <ReportAnalyzer>true</ReportAnalyzer>
+        <AnalysisMode>All</AnalysisMode>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+
+        <Company>Mohsen Rajabi</Company>
+        <Copyright>MohsenRajabi@2022</Copyright>
+        <Authors>Mohsen Rajabi</Authors>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <PackageReference Include="Meziantou.Analyzer" Version="1.0.702">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="Properties/BannedSymbols.txt" />
+        <Compile Include="$(MSBuildThisFileDirectory)/AssemblyInfo.cs" Link="Properties/AssemblyInfo.common.cs" />
+    </ItemGroup>
+</Project>
