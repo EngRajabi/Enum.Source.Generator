@@ -27,11 +27,13 @@
 
 
         <Description>
-            A package for easy use of dapper in aspcore that needs to be used very simply. asp core dapper(micro orm) extensions
+            A C# source generator to create an enumeration class from an enum type.
+            With this package, you can work on enums very, very fast without using reflection.
         </Description>
         <PackageTags>
             enums enum codegenerator codegeneration code-generator sourcegenerator source-generator sourcegenerators source-generators
-            codegenerators code-generators fastenum fast-enum codegen generator generators
+            codegenerators code-generators fastenum fast-enum codegen generator generators reflection enum-generator enumgenerator
+            enumfast enum-fast
         </PackageTags>
 
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
