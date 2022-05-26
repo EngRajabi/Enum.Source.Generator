@@ -25,9 +25,6 @@
         <Copyright>MohsenRajabi@2022</Copyright>
         <Authors>Mohsen Rajabi</Authors>
 
-        <Version>1.0.0</Version>
-        <PackageVersion>1.0.0</PackageVersion>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
 
         <Description>
             A package for easy use of dapper in aspcore that needs to be used very simply. asp core dapper(micro orm) extensions
