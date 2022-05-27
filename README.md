@@ -78,6 +78,16 @@ This will generate a class called `MyEnumExtensions` (by default), which contain
     }
 ```
 
+Usage
+```csharp
+var stringEnum = UserType.Men.StringToFast(); //Men;
+
+
+var isDefined = UserTypeEnumExtensions.IsDefinedFast(UserType.Men); //true;
+
+var displayEnum = UserType.Men.ToDisplayFast(); //مرد
+```
+
 Benchmark
 
 ![Benchmark](https://raw.githubusercontent.com/EngRajabi/Enum.Source.Generator/master/Supernova.Enum.Generators.png?v=1)
