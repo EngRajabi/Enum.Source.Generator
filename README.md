@@ -82,8 +82,7 @@ Usage
 ```csharp
 var stringEnum = UserType.Men.StringToFast(); //Men;
 
-
-var isDefined = UserTypeEnumExtensions.IsDefinedFast(UserType.Men); //true;
+var isDefined = UserTypeTestEnumExtensions.IsDefinedFast(UserType.Men); //true;
 
 var displayEnum = UserType.Men.ToDisplayFast(); //مرد
 ```
