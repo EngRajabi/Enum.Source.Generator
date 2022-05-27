@@ -19,10 +19,13 @@ To use the generator, add the `[EnumGenerator]` attribute to an enum. For exampl
 [EnumGenerator]
 public enum UserTypeTest
 {
+    [Display(Name = "مرد")]
     Men,
 
+    [Display(Name = "زن")]
     Women,
 
+    //[Display(Name = "نامشخص")]
     None
 }
 ```
@@ -42,7 +45,7 @@ This will generate a class called `MyEnumExtensions` (by default), which contain
                 _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }
-        public static bool IsDefined(UnitTests.UserTypeTest states)
+        public static bool IsDefinedFast(UnitTests.UserTypeTest states)
         {
             return states switch
             {
@@ -52,13 +55,23 @@ This will generate a class called `MyEnumExtensions` (by default), which contain
                 _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }
-        public static bool IsDefined(string states)
+        public static bool IsDefinedFast(string states)
         {
             return states switch
             {
                 nameof(UnitTests.UserTypeTest.Men) => true,
                 nameof(UnitTests.UserTypeTest.Women) => true,
                 nameof(UnitTests.UserTypeTest.None) => true,
+                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            };
+        }
+        public static string ToDisplayFast(this UnitTests.UserTypeTest states)
+        {
+            return states switch
+            {
+                UnitTests.UserTypeTest.Men => "مرد",
+                UnitTests.UserTypeTest.Women => "زن",
+                UnitTests.UserTypeTest.None => "None",
                 _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }

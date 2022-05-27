@@ -13,10 +13,10 @@ namespace UnitTests;
 [EnumGenerator]
 public enum UserTypeTest
 {
-    //[Display(Name = "مرد")]
+    [Display(Name = "مرد")]
     Men,
 
-    //[Display(Name = "زن")]
+    [Display(Name = "زن")]
     Women,
 
     //[Display(Name = "نامشخص")]
@@ -31,7 +31,7 @@ public class EnumGeneratorTest
     [TestMethod]
     public void TestEnumDefined()
     {
-        var defined =UserTypeTestEnumExtensions.IsDefined("Men");
+        var defined =UserTypeTestEnumExtensions.IsDefinedFast("Men");
 
         Assert.IsTrue(defined);
     }
@@ -42,5 +42,21 @@ public class EnumGeneratorTest
         var menString =UserTypeTest.Men.StringToFast();
 
         Assert.AreEqual("Men", menString);
+    }
+
+    [TestMethod]
+    public void TestEnumToDisplay()
+    {
+        var menString =UserTypeTest.Men.ToDisplayFast();
+
+        Assert.AreEqual("مرد", menString);
+    }
+
+    [TestMethod]
+    public void TestEnumToDisplayNone()
+    {
+        var menString =UserTypeTest.None.ToDisplayFast();
+
+        Assert.AreEqual("None", menString);
     }
 }

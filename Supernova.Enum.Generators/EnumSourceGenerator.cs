@@ -23,7 +23,7 @@ public class EnumSourceGenerator : ISourceGenerator
 //        {
 //            Debugger.Launch();
 //        }
-//#endif 
+//#endif
         context.AddSource($"{SourceGeneratorHelper.AttributeName}Attribute.g.cs", SourceText.From($@"using System;
 namespace {SourceGeneratorHelper.NameSpace}
 {{
@@ -51,13 +51,19 @@ namespace {SourceGeneratorHelper.NameSpace}
         foreach (var e in enums)
         {
             var semanticModel = context.Compilation.GetSemanticModel(e.SyntaxTree);
+            if (semanticModel.GetDeclaredSymbol(e) is not INamedTypeSymbol enumSymbol)
+            {
+                // report diagnostic, something went wrong
+                continue;
+            }
+
             var symbol = semanticModel.GetDeclaredSymbol(e);
             var symbolName = $"{symbol.ContainingNamespace}.{symbol.Name}";
 
-            var attribute = symbol.GetAttributes()
-                .FirstOrDefault(x => string.Equals(x.AttributeClass.Name, SourceGeneratorHelper.AttributeName,
-                    StringComparison.OrdinalIgnoreCase));
-            var argumentList = ((AttributeSyntax)attribute.ApplicationSyntaxReference.GetSyntax()).ArgumentList;
+            //var attribute = symbol.GetAttributes()
+            //    .FirstOrDefault(x => string.Equals(x.AttributeClass.Name, SourceGeneratorHelper.AttributeName,
+            //        StringComparison.OrdinalIgnoreCase));
+            //var argumentList = ((AttributeSyntax)attribute.ApplicationSyntaxReference.GetSyntax()).ArgumentList;
             //var methodName = argumentList != null
             //    ? argumentList.Arguments
             //        .Where(x => string.Equals(x.NameEquals.Name.Identifier.Text, "MethodName",
@@ -116,10 +122,64 @@ namespace {SourceGeneratorHelper.NameSpace}
             };
         }");
 
+
+            /**********************/
+            var memberAttribute = new Dictionary<string, string>();
+            foreach (var member in enumSymbol.GetMembers())
+            {
+                if (member is not IFieldSymbol field
+                    || field.ConstantValue is null)
+                {
+                    continue;
+                }
+
+                foreach (var attribute in member.GetAttributes())
+                {
+                    if (attribute.AttributeClass is null || attribute.AttributeClass.Name != "DisplayAttribute")
+                    {
+                        continue;
+                    }
+
+                    foreach (var namedArgument in attribute.NamedArguments)
+                    {
+                        if (namedArgument.Key.Equals("Name", StringComparison.OrdinalIgnoreCase) &&
+                            namedArgument.Value.Value?.ToString() is { } dn)
+                        {
+                            memberAttribute.Add(member.Name, dn);
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+            //ToDisplay string
+            sourceBuilder.Append($@"
+        public static string {SourceGeneratorHelper.ExtensionMethodNameToDisplay}(this {symbolName} states)
+        {{
+            return states switch
+            {{
+");
+            //foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            foreach (EnumMemberDeclarationSyntax member in e.Members)
+            {
+                var display = memberAttribute
+                                  .FirstOrDefault(r =>
+                                      r.Key.Equals(member.Identifier.ValueText, StringComparison.OrdinalIgnoreCase)).Value
+                              ?? member.Identifier.ValueText;
+
+                sourceBuilder.AppendLine($@"                {symbolName}.{member.Identifier.ValueText} => ""{display}"",");
+            }
+            sourceBuilder.Append(
+                @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            };
+        }");
+
             sourceBuilder.Append(@"
     }
 }
 ");
+
             context.AddSource($"{symbol.Name}_EnumGenerator.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
 
         }
