@@ -79,7 +79,7 @@ This will generate a class called `MyEnumExtensions` (by default), which contain
 ```
 
 Benchmark
-![Benchmark](https://raw.githubusercontent.com/EngRajabi/Enum.Source.Generator/master/Supernova.Enum.Generators.png)
+![Benchmark](https://raw.githubusercontent.com/EngRajabi/Enum.Source.Generator/master/Supernova.Enum.Generators.png?v=1)
 
 ## Contributing
 
