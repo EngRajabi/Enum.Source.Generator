@@ -33,7 +33,7 @@
         <PackageTags>
             enums enum codegenerator codegeneration code-generator sourcegenerator source-generator sourcegenerators source-generators
             codegenerators code-generators fastenum fast-enum codegen generator generators reflection enum-generator enumgenerator
-            enumfast enum-fast
+            enumfast enum-fast csharp-sourcegenerator
         </PackageTags>
 
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
