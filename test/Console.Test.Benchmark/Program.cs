@@ -1,4 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Columns;
@@ -16,10 +19,10 @@ namespace Console.Test.Benchmark;
 [EnumGenerator]
 public enum UserType
 {
-    //[Display(Name = "مرد")]
+    [Display(Name = "مرد")]
     Men,
 
-    //[Display(Name = "زن")]
+    [Display(Name = "زن")]
     Women,
 
     //[Display(Name = "نامشخص")]
@@ -79,7 +82,39 @@ public class EnumBenchmark
     [Benchmark]
     public bool FastIsDefined()
     {
-        return UserTypeEnumExtensions.IsDefined(UserType.Men);
+        return UserTypeEnumExtensions.IsDefinedFast(UserType.Men);
     }
 
+    [Benchmark]
+    public string NativeToDisplay()
+    {
+        return UserType.Men.ToDisplayNative();
+    }
+
+    [Benchmark]
+    public string FastToDisplay()
+    {
+        return UserType.Men.ToDisplayFast();
+    }
+
+}
+
+
+public static class Ext
+{
+    public static string ToDisplayNative(this Enum value)
+    {
+        if (value is null)
+            throw new ArgumentNullException(nameof(value));
+
+        var attribute = value.GetType().GetField(value.ToString())?
+            .GetCustomAttributes<DisplayAttribute>(false).FirstOrDefault();
+
+        if (attribute == null)
+            return value.ToString();
+
+        var propValue = attribute.GetType().GetProperty("Name")?.GetValue(attribute, null);
+
+        return propValue?.ToString();
+    }
 }
