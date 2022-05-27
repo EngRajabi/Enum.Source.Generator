@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -52,10 +51,8 @@ namespace {SourceGeneratorHelper.NameSpace}
         {
             var semanticModel = context.Compilation.GetSemanticModel(e.SyntaxTree);
             if (semanticModel.GetDeclaredSymbol(e) is not INamedTypeSymbol enumSymbol)
-            {
                 // report diagnostic, something went wrong
                 continue;
-            }
 
             var symbol = semanticModel.GetDeclaredSymbol(e);
             var symbolName = $"{symbol.ContainingNamespace}.{symbol.Name}";
@@ -129,26 +126,20 @@ namespace {SourceGeneratorHelper.NameSpace}
             {
                 if (member is not IFieldSymbol field
                     || field.ConstantValue is null)
-                {
                     continue;
-                }
 
                 foreach (var attribute in member.GetAttributes())
                 {
-                    if (attribute.AttributeClass is null || attribute.AttributeClass.Name != "DisplayAttribute")
-                    {
-                        continue;
-                    }
+                    if (attribute.AttributeClass is null ||
+                        attribute.AttributeClass.Name != "DisplayAttribute") continue;
 
                     foreach (var namedArgument in attribute.NamedArguments)
-                    {
                         if (namedArgument.Key.Equals("Name", StringComparison.OrdinalIgnoreCase) &&
                             namedArgument.Value.Value?.ToString() is { } dn)
                         {
                             memberAttribute.Add(member.Name, dn);
                             break;
                         }
-                    }
                 }
             }
 
@@ -161,15 +152,18 @@ namespace {SourceGeneratorHelper.NameSpace}
             {{
 ");
             //foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-            foreach (EnumMemberDeclarationSyntax member in e.Members)
+            foreach (var member in e.Members)
             {
                 var display = memberAttribute
                                   .FirstOrDefault(r =>
-                                      r.Key.Equals(member.Identifier.ValueText, StringComparison.OrdinalIgnoreCase)).Value
+                                      r.Key.Equals(member.Identifier.ValueText, StringComparison.OrdinalIgnoreCase))
+                                  .Value
                               ?? member.Identifier.ValueText;
 
-                sourceBuilder.AppendLine($@"                {symbolName}.{member.Identifier.ValueText} => ""{display}"",");
+                sourceBuilder.AppendLine(
+                    $@"                {symbolName}.{member.Identifier.ValueText} => ""{display}"",");
             }
+
             sourceBuilder.Append(
                 @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
@@ -180,9 +174,8 @@ namespace {SourceGeneratorHelper.NameSpace}
 }
 ");
 
-            context.AddSource($"{symbol.Name}_EnumGenerator.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
-
+            context.AddSource($"{symbol.Name}_EnumGenerator.g.cs",
+                SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
         }
-
     }
 }

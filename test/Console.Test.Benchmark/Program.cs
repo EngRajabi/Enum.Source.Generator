@@ -3,10 +3,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using BenchmarkDotNet.Analysers;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Environments;
+using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Running;
@@ -15,15 +18,12 @@ using Perfolizer.Horology;
 
 namespace Console.Test.Benchmark;
 
-
 [EnumGenerator]
 public enum UserType
 {
-    [Display(Name = "مرد")]
-    Men,
+    [Display(Name = "مرد")] Men,
 
-    [Display(Name = "زن")]
-    Women,
+    [Display(Name = "زن")] Women,
 
     //[Display(Name = "نامشخص")]
     None
@@ -35,9 +35,9 @@ public class Program
     {
         Regex.CacheSize += 100;
         var config = ManualConfig.Create(DefaultConfig.Instance)
-            .AddAnalyser(BenchmarkDotNet.Analysers.EnvironmentAnalyser.Default)
-            .AddExporter(BenchmarkDotNet.Exporters.MarkdownExporter.GitHub)
-            .AddDiagnoser(BenchmarkDotNet.Diagnosers.MemoryDiagnoser.Default)
+            .AddAnalyser(EnvironmentAnalyser.Default)
+            .AddExporter(MarkdownExporter.GitHub)
+            .AddDiagnoser(MemoryDiagnoser.Default)
             //.AddColumn(StatisticColumn.AllStatistics)
             //.AddColumn(StatisticColumn.Median)
             //.AddColumn(StatisticColumn.StdDev)
@@ -62,14 +62,14 @@ public class EnumBenchmark
     [Benchmark]
     public string NativeToString()
     {
-        UserType state = UserType.Men;
+        var state = UserType.Men;
         return state.ToString();
     }
 
     [Benchmark]
     public string FasterToString()
     {
-        UserType state = UserType.Men;
+        var state = UserType.Men;
         return state.StringToFast();
     }
 
@@ -96,9 +96,7 @@ public class EnumBenchmark
     {
         return UserType.Men.ToDisplayFast();
     }
-
 }
-
 
 public static class Ext
 {
