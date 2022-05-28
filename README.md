@@ -1,5 +1,8 @@
-﻿# Supernova.Enum.Generators
-# C# Better Enums Source Generator (Very Fast)
+﻿[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/EngRajabi/Enum.Source.Generator/master/LICENSE)
+[![Nuget](https://img.shields.io/nuget/dt/Supernova.Enum.Generators?label=Nuget.org%20Downloads&style=flat-square&color=blue)](https://www.nuget.org/packages/Supernova.Enum.Generators)
+
+# Supernova.Enum.Generators
+# The best Source Generator for working with enums in C#
 A C# source generator to create an enumeration class from an enum type.
 With this package, you can work on enums very, very fast without using reflection.
 
@@ -30,7 +33,8 @@ public enum UserTypeTest
 }
 ```
 
-This will generate a class called `MyEnumExtensions` (by default), which contains a number of helper methods. For example:
+This will generate a class called `EnumNameEnumExtensions` (`UserTypeTest` + `EnumExtensions`), which contains a number of helper methods.
+For example:
 
 ```csharp
     public static class UserTypeTestEnumExtensions
@@ -78,6 +82,8 @@ This will generate a class called `MyEnumExtensions` (by default), which contain
     }
 ```
 
+You do not see this file inside the project. But you can use it.
+
 Usage
 ```csharp
 var stringEnum = UserType.Men.StringToFast(); //Men;
@@ -86,6 +92,8 @@ var isDefined = UserTypeTestEnumExtensions.IsDefinedFast(UserType.Men); //true;
 
 var displayEnum = UserType.Men.ToDisplayFast(); //مرد
 ```
+
+If you had trouble using UserTypeTestEnumExtensions and the IDE did not recognize it. This is an IDE problem and you need to restart the IDE once.
 
 Benchmark
 
