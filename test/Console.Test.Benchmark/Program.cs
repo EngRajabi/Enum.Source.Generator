@@ -96,6 +96,42 @@ public class EnumBenchmark
     {
         return UserType.Men.ToDisplayFast();
     }
+
+    [Benchmark]
+    public UserType[] NativeGetValues()
+    {
+        return (UserType[])Enum.GetValues(typeof(UserType));
+    }
+
+    [Benchmark]
+    public UserType[] FastGetValues()
+    {
+        return UserTypeEnumExtensions.GetValuesFast();
+    }
+
+    [Benchmark]
+    public string[] NativeGetNames()
+    {
+        return Enum.GetNames<UserType>();
+    }
+
+    [Benchmark]
+    public string[] FastGetNames()
+    {
+        return UserTypeEnumExtensions.GetNamesFast();
+    }
+
+    [Benchmark]
+    public int NativeGetLength()
+    {
+        return Enum.GetNames<UserType>().Length;
+    }
+
+    [Benchmark]
+    public int FastGetLength()
+    {
+        return UserTypeEnumExtensions.GetLengthFast();
+    }
 }
 
 public static class Ext

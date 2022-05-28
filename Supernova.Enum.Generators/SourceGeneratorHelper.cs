@@ -16,6 +16,9 @@ using System;
     public const string ExtensionMethodNameToString = "StringToFast";
     public const string ExtensionMethodNameIsDefined = "IsDefinedFast";
     public const string ExtensionMethodNameToDisplay = "ToDisplayFast";
+    public const string ExtensionMethodNameGetValues = "GetValuesFast";
+    public const string ExtensionMethodNameGetNames = "GetNamesFast";
+    public const string ExtensionMethodNameGetLength = "GetLengthFast";
 
     public const string Attribute = Header + $@"
 

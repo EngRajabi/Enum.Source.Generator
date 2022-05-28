@@ -17,12 +17,12 @@ public class EnumSourceGenerator : ISourceGenerator
 
     public void Execute(GeneratorExecutionContext context)
     {
-//#if DEBUG
-//        if (!Debugger.IsAttached)
-//        {
-//            Debugger.Launch();
-//        }
-//#endif
+        //#if DEBUG
+        //        if (!Debugger.IsAttached)
+        //        {
+        //            Debugger.Launch();
+        //        }
+        //#endif
         context.AddSource($"{SourceGeneratorHelper.AttributeName}Attribute.g.cs", SourceText.From($@"using System;
 namespace {SourceGeneratorHelper.NameSpace}
 {{
@@ -69,56 +69,6 @@ namespace {SourceGeneratorHelper.NameSpace}
             //        .DefaultIfEmpty(SourceGeneratorHelper.ExtensionMethodName).First()
             //    : SourceGeneratorHelper.ExtensionMethodName;
 
-            var sourceBuilder = new StringBuilder($@"using System;
-namespace {SourceGeneratorHelper.NameSpace}
-{{
-    public static class {symbol.Name}EnumExtensions
-    {{");
-
-            //ToStringFast
-            sourceBuilder.Append($@"
-        public static string {SourceGeneratorHelper.ExtensionMethodNameToString}(this {symbolName} states)
-        {{
-            return states switch
-            {{
-");
-            foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-                sourceBuilder.AppendLine($@"                {symbolName}.{member} => nameof({symbolName}.{member}),");
-            sourceBuilder.Append(
-                @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
-            };
-        }");
-
-
-            //IsDefined enum
-            sourceBuilder.Append($@"
-        public static bool {SourceGeneratorHelper.ExtensionMethodNameIsDefined}({symbolName} states)
-        {{
-            return states switch
-            {{
-");
-            foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-                sourceBuilder.AppendLine($@"                {symbolName}.{member} => true,");
-            sourceBuilder.Append(
-                @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
-            };
-        }");
-
-
-            //IsDefined string
-            sourceBuilder.Append($@"
-        public static bool {SourceGeneratorHelper.ExtensionMethodNameIsDefined}(string states)
-        {{
-            return states switch
-            {{
-");
-            foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-                sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}) => true,");
-            sourceBuilder.Append(
-                @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
-            };
-        }");
-
 
             /**********************/
             var memberAttribute = new Dictionary<string, string>();
@@ -143,31 +93,32 @@ namespace {SourceGeneratorHelper.NameSpace}
                 }
             }
 
+            var sourceBuilder = new StringBuilder($@"using System;
+namespace {SourceGeneratorHelper.NameSpace}
+{{
+    public static class {symbol.Name}EnumExtensions
+    {{");
+
+            //ToStringFast
+            ToStringFast(sourceBuilder, symbolName, e);
+
+            //IsDefined enum
+            IsDefinedEnum(sourceBuilder, symbolName, e);
+
+            //IsDefined string
+            IsDefinedString(sourceBuilder, e, symbolName);
 
             //ToDisplay string
-            sourceBuilder.Append($@"
-        public static string {SourceGeneratorHelper.ExtensionMethodNameToDisplay}(this {symbolName} states)
-        {{
-            return states switch
-            {{
-");
-            //foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-            foreach (var member in e.Members)
-            {
-                var display = memberAttribute
-                                  .FirstOrDefault(r =>
-                                      r.Key.Equals(member.Identifier.ValueText, StringComparison.OrdinalIgnoreCase))
-                                  .Value
-                              ?? member.Identifier.ValueText;
+            ToDisplay(sourceBuilder, symbolName, e, memberAttribute);
 
-                sourceBuilder.AppendLine(
-                    $@"                {symbolName}.{member.Identifier.ValueText} => ""{display}"",");
-            }
+            //GetValues
+            GetValuesFast(sourceBuilder, symbolName, e);
 
-            sourceBuilder.Append(
-                @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
-            };
-        }");
+            //GetNames
+            GetNamesFast(sourceBuilder, symbolName, e);
+
+            //GetLength
+            GetLengthFast(sourceBuilder, symbolName, e);
 
             sourceBuilder.Append(@"
     }
@@ -177,5 +128,122 @@ namespace {SourceGeneratorHelper.NameSpace}
             context.AddSource($"{symbol.Name}_EnumGenerator.g.cs",
                 SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
         }
+    }
+
+    private static void ToDisplay(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
+        Dictionary<string, string> memberAttribute)
+    {
+        sourceBuilder.Append($@"
+        public static string {SourceGeneratorHelper.ExtensionMethodNameToDisplay}(this {symbolName} states)
+        {{
+            return states switch
+            {{
+");
+        foreach (var member in e.Members)
+        {
+            var display = memberAttribute
+                              .FirstOrDefault(r =>
+                                  r.Key.Equals(member.Identifier.ValueText, StringComparison.OrdinalIgnoreCase))
+                              .Value
+                          ?? member.Identifier.ValueText;
+
+            sourceBuilder.AppendLine(
+                $@"                {symbolName}.{member.Identifier.ValueText} => ""{display}"",");
+        }
+
+        sourceBuilder.Append(
+            @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            };
+        }");
+    }
+
+    private static void IsDefinedString(StringBuilder sourceBuilder, EnumDeclarationSyntax e, string symbolName)
+    {
+        sourceBuilder.Append($@"
+        public static bool {SourceGeneratorHelper.ExtensionMethodNameIsDefined}(string states)
+        {{
+            return states switch
+            {{
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}) => true,");
+        sourceBuilder.Append(
+            @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            };
+        }");
+    }
+
+    private static void IsDefinedEnum(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    {
+        sourceBuilder.Append($@"
+        public static bool {SourceGeneratorHelper.ExtensionMethodNameIsDefined}({symbolName} states)
+        {{
+            return states switch
+            {{
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine($@"                {symbolName}.{member} => true,");
+        sourceBuilder.Append(
+            @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            };
+        }");
+    }
+
+    private static void ToStringFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    {
+        sourceBuilder.Append($@"
+        public static string {SourceGeneratorHelper.ExtensionMethodNameToString}(this {symbolName} states)
+        {{
+            return states switch
+            {{
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine($@"                {symbolName}.{member} => nameof({symbolName}.{member}),");
+        sourceBuilder.Append(
+            @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            };
+        }");
+    }
+
+    private static void GetValuesFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    {
+        sourceBuilder.Append($@"
+        public static {symbolName}[] {SourceGeneratorHelper.ExtensionMethodNameGetValues}()
+        {{
+            return new[]
+            {{
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine($@"                {symbolName}.{member},");
+
+        sourceBuilder.Append(@"            };
+        }");
+    }
+
+    private static void GetNamesFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    {
+        sourceBuilder.Append($@"
+        public static string[] {SourceGeneratorHelper.ExtensionMethodNameGetNames}()
+        {{
+            return new[]
+            {{
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}),");
+
+        sourceBuilder.Append(@"            };
+        }");
+    }
+
+    private static void GetLengthFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    {
+        sourceBuilder.Append($@"
+        public static int {SourceGeneratorHelper.ExtensionMethodNameGetLength}()
+        {{
+            return {e.Members.Count};
+");
+
+        sourceBuilder.Append(@"
+        }");
     }
 }

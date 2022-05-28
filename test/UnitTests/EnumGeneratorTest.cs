@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using EnumFastToStringGenerated;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTests;
@@ -48,5 +49,37 @@ public class EnumGeneratorTest
         var menString = UserTypeTest.None.ToDisplayFast();
 
         Assert.AreEqual("None", menString);
+    }
+
+    [TestMethod]
+    public void TestEnumGetNames()
+    {
+        var names = UserTypeTestEnumExtensions.GetNamesFast();
+
+        Assert.IsNotNull(names);
+        names.Should().NotBeEmpty()
+            .And.HaveCount(3)
+            .And.ContainInOrder(nameof(UserTypeTest.Men), nameof(UserTypeTest.Women), nameof(UserTypeTest.None))
+            .And.ContainItemsAssignableTo<string>();
+    }
+
+    [TestMethod]
+    public void TestEnumGetValues()
+    {
+        var values = UserTypeTestEnumExtensions.GetValuesFast();
+
+        Assert.IsNotNull(values);
+        values.Should().NotBeEmpty()
+            .And.HaveCount(3)
+            .And.ContainInOrder(UserTypeTest.Men, UserTypeTest.Women, UserTypeTest.None)
+            .And.ContainItemsAssignableTo<UserTypeTest>();
+    }
+
+    [TestMethod]
+    public void TestEnumGetLength()
+    {
+        var length = UserTypeTestEnumExtensions.GetLengthFast();
+        
+        Assert.AreEqual(3, length);
     }
 }

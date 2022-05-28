@@ -79,6 +79,29 @@ For example:
                 _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }
+        public static UnitTests.UserTypeTest[] GetValuesFast()
+        {
+            return new[]
+            {
+                UnitTests.UserTypeTest.Men,
+                UnitTests.UserTypeTest.Women,
+                UnitTests.UserTypeTest.None,
+            };
+        }
+        public static string[] GetNamesFast()
+        {
+            return new[]
+            {
+                nameof(UnitTests.UserTypeTest.Men),
+                nameof(UnitTests.UserTypeTest.Women),
+                nameof(UnitTests.UserTypeTest.None),
+            };
+        }
+        public static int GetLengthFast()
+        {
+            return 3;
+
+        }
     }
 ```
 
@@ -86,18 +109,24 @@ You do not see this file inside the project. But you can use it.
 
 Usage
 ```csharp
-var stringEnum = UserType.Men.StringToFast(); //Men;
+var stringEnum = UserTypeTest.Men.StringToFast(); //Men;
 
 var isDefined = UserTypeTestEnumExtensions.IsDefinedFast(UserType.Men); //true;
 
-var displayEnum = UserType.Men.ToDisplayFast(); //مرد
+var displayEnum = UserTypeTest.Men.ToDisplayFast(); //مرد
+
+var names = UserTypeTestEnumExtensions.GetNamesFast(); //string[]
+
+var values = UserTypeTestEnumExtensions.GetValuesFast(); //UserType[]
+
+var length = UserTypeTestEnumExtensions.GetLengthFast(); //3
 ```
 
 If you had trouble using UserTypeTestEnumExtensions and the IDE did not recognize it. This is an IDE problem and you need to restart the IDE once.
 
 Benchmark
 
-![Benchmark](https://raw.githubusercontent.com/EngRajabi/Enum.Source.Generator/master/Supernova.Enum.Generators.png?v=1)
+![Benchmark](https://raw.githubusercontent.com/EngRajabi/Enum.Source.Generator/master/Supernova.Enum.Generators.png?v=2)
 
 ## Contributing
 
