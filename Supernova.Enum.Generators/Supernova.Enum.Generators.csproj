@@ -10,6 +10,10 @@
       <AssemblyVersion>1.0.11</AssemblyVersion>
       <PackageReadmeFile>README.md</PackageReadmeFile>
       <PackageIcon>icon.png</PackageIcon>
+      <PackageReleaseNotes>v1.0.11
+- Add method GetValuesFast
+- Add method GetNamesFast
+- Add method GetLengthFast</PackageReleaseNotes>
   </PropertyGroup>
 
     <ItemGroup>
