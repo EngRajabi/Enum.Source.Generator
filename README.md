@@ -1,5 +1,6 @@
 ﻿[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/EngRajabi/Enum.Source.Generator/master/LICENSE)
 [![Nuget](https://img.shields.io/nuget/dt/Supernova.Enum.Generators?label=Nuget.org%20Downloads&style=flat-square&color=blue)](https://www.nuget.org/packages/Supernova.Enum.Generators)
+[![Nuget](https://img.shields.io/nuget/vpre/Supernova.Enum.Generators.svg?label=NuGet)](https://www.nuget.org/packages/Supernova.Enum.Generators)
 
 # Supernova.Enum.Generators
 # The best Source Generator for working with enums in C#
