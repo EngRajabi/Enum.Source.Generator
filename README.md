@@ -127,7 +127,7 @@ If you had trouble using UserTypeTestEnumExtensions and the IDE did not recogniz
 
 Benchmark
 
-![Benchmark](https://raw.githubusercontent.com/EngRajabi/Enum.Source.Generator/master/Supernova.Enum.Generators.png?v=3)
+![Benchmark](https://raw.githubusercontent.com/EngRajabi/Enum.Source.Generator/master/Supernova.Enum.Generators.png?v=4)
 
 ## Contributing
 
