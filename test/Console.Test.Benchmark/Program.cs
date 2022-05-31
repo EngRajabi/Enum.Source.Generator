@@ -1,9 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using BenchmarkDotNet.Analysers;
+﻿using BenchmarkDotNet.Analysers;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
@@ -15,6 +10,11 @@ using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Running;
 using EnumFastToStringGenerated;
 using Perfolizer.Horology;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Console.Test.Benchmark;
 
@@ -70,7 +70,7 @@ public class EnumBenchmark
     public string FasterToString()
     {
         var state = UserType.Men;
-        return state.StringToFast();
+        return state.ToStringFast();
     }
 
     [Benchmark]

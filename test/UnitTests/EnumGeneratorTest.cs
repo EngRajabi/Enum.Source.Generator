@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using EnumFastToStringGenerated;
+﻿using EnumFastToStringGenerated;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace UnitTests;
 
@@ -30,7 +31,7 @@ public class EnumGeneratorTest
     [TestMethod]
     public void TestEnumToString()
     {
-        var menString = UserTypeTest.Men.StringToFast();
+        var menString = UserTypeTest.Men.ToStringFast();
 
         Assert.AreEqual("Men", menString);
     }
@@ -79,7 +80,7 @@ public class EnumGeneratorTest
     public void TestEnumGetLength()
     {
         var length = UserTypeTestEnumExtensions.GetLengthFast();
-        
-        Assert.AreEqual(3, length);
+
+        Assert.AreEqual(Enum.GetValues<UserTypeTest>().Length, length);
     }
 }
