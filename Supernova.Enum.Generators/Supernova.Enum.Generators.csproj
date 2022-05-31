@@ -5,9 +5,9 @@
       <PackageId>Supernova.Enum.Generators</PackageId>
       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
       <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-      <Version>1.0.11</Version>
-      <PackageVersion>1.0.11</PackageVersion>
-      <AssemblyVersion>1.0.11</AssemblyVersion>
+      <Version>1.0.13-beta</Version>
+      <PackageVersion>1.0.13-beta</PackageVersion>
+      <AssemblyVersion>1.0.13</AssemblyVersion>
       <PackageReadmeFile>README.md</PackageReadmeFile>
       <PackageIcon>icon.png</PackageIcon>
       <PackageReleaseNotes>v1.0.11

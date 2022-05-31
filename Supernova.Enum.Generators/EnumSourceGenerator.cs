@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -9,68 +11,87 @@ using Microsoft.CodeAnalysis.Text;
 namespace Supernova.Enum.Generators;
 
 [Generator]
-public class EnumSourceGenerator : ISourceGenerator
+public class EnumSourceGenerator : IIncrementalGenerator
 {
-    public void Initialize(GeneratorInitializationContext context)
-    {
-    }
+    private static readonly string AttributeName = "Supernova.Enum.Generators.EnumGeneratorAttribute";
 
-    public void Execute(GeneratorExecutionContext context)
+    public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        //#if DEBUG
-        //        if (!Debugger.IsAttached)
-        //        {
-        //            Debugger.Launch();
-        //        }
-        //#endif
-        context.AddSource($"{SourceGeneratorHelper.AttributeName}Attribute.g.cs", SourceText.From($@"using System;
-namespace {SourceGeneratorHelper.NameSpace}
+//#if DEBUG
+//        if (!Debugger.IsAttached)
+//        {
+//            Debugger.Launch();
+//        }
+//#endif
+
+        context.RegisterPostInitializationOutput(ctx => ctx.AddSource(
+            "EnumGeneratorAttribute.g.cs", SourceText.From($@"using System;
+namespace Supernova.Enum.Generators
 {{
     [AttributeUsage(AttributeTargets.Enum)]
-    public sealed class {SourceGeneratorHelper.AttributeName}Attribute : Attribute
+    public sealed class EnumGeneratorAttribute : Attribute
     {{
     }}
 }}
-", Encoding.UTF8));
+", Encoding.UTF8)));
 
-        var enums = new List<EnumDeclarationSyntax>();
+        var mapperClassDeclarations = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                static (s, _) => IsSyntaxTargetForGeneration(s),
+                static (ctx, _) => GetSemanticTargetForGeneration(ctx))
+            .Where(r => r != null);
 
-        foreach (var syntaxTree in context.Compilation.SyntaxTrees)
+
+        var compilationAndMappers = context.CompilationProvider.Combine(mapperClassDeclarations.Collect());
+        context.RegisterSourceOutput(compilationAndMappers, static
+            (spc, source) => Execute(source.Left, source.Right, spc));
+    }
+
+    private static bool IsSyntaxTargetForGeneration(SyntaxNode node)
+    {
+        return node is EnumDeclarationSyntax { AttributeLists.Count: > 0 };
+    }
+
+
+    private static EnumDeclarationSyntax GetSemanticTargetForGeneration(GeneratorSyntaxContext context)
+    {
+        var enumDeclarationSyntax = (EnumDeclarationSyntax)context.Node;
+        foreach (var attributeListSyntax in enumDeclarationSyntax.AttributeLists)
+            foreach (var attributeSyntax in attributeListSyntax.Attributes)
+            {
+                if (context.SemanticModel.GetSymbolInfo(attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
+                    continue;
+
+                var attributeContainingTypeSymbol = attributeSymbol.ContainingType;
+                var fullName = attributeContainingTypeSymbol.ToDisplayString();
+
+                if (fullName == AttributeName)
+                    return enumDeclarationSyntax;
+            }
+
+        return null;
+    }
+
+    private static void Execute(Compilation compilation, ImmutableArray<EnumDeclarationSyntax> enums,
+        SourceProductionContext context)
+    {
+        if (enums.IsDefaultOrEmpty)
+            return;
+
+        var distinctEnums = enums.Distinct();
+
+        var enumAttribute = compilation.GetTypeByMetadataName(AttributeName);
+        if (enumAttribute == null)
+            return;
+        
+        foreach (var enumDeclarationSyntax in enums)
         {
-            var semanticModel = context.Compilation.GetSemanticModel(syntaxTree);
-
-            enums.AddRange(syntaxTree.GetRoot().DescendantNodesAndSelf()
-                .OfType<EnumDeclarationSyntax>()
-                .Where(x => semanticModel.GetDeclaredSymbol(x).GetAttributes()
-                    .Any(x => string.Equals(x.AttributeClass.Name, SourceGeneratorHelper.AttributeName,
-                        StringComparison.OrdinalIgnoreCase))));
-        }
-
-
-        foreach (var e in enums)
-        {
-            var semanticModel = context.Compilation.GetSemanticModel(e.SyntaxTree);
-            if (semanticModel.GetDeclaredSymbol(e) is not INamedTypeSymbol enumSymbol)
+            var semanticModel = compilation.GetSemanticModel(enumDeclarationSyntax.SyntaxTree);
+            if (semanticModel.GetDeclaredSymbol(enumDeclarationSyntax) is not INamedTypeSymbol enumSymbol)
                 // report diagnostic, something went wrong
                 continue;
 
-            var symbol = semanticModel.GetDeclaredSymbol(e);
-            var symbolName = $"{symbol.ContainingNamespace}.{symbol.Name}";
-
-            //var attribute = symbol.GetAttributes()
-            //    .FirstOrDefault(x => string.Equals(x.AttributeClass.Name, SourceGeneratorHelper.AttributeName,
-            //        StringComparison.OrdinalIgnoreCase));
-            //var argumentList = ((AttributeSyntax)attribute.ApplicationSyntaxReference.GetSyntax()).ArgumentList;
-            //var methodName = argumentList != null
-            //    ? argumentList.Arguments
-            //        .Where(x => string.Equals(x.NameEquals.Name.Identifier.Text, "MethodName",
-            //            StringComparison.OrdinalIgnoreCase))
-            //        .Select(x => semanticModel.GetConstantValue(x.Expression).ToString())
-            //        .DefaultIfEmpty(SourceGeneratorHelper.ExtensionMethodName).First()
-            //    : SourceGeneratorHelper.ExtensionMethodName;
-
-
-            /**********************/
+            var symbolName = $"{enumSymbol.ContainingNamespace}.{enumSymbol.Name}";
             var memberAttribute = new Dictionary<string, string>();
             foreach (var member in enumSymbol.GetMembers())
             {
@@ -93,39 +114,40 @@ namespace {SourceGeneratorHelper.NameSpace}
                 }
             }
 
+
             var sourceBuilder = new StringBuilder($@"using System;
-namespace {SourceGeneratorHelper.NameSpace}
+namespace EnumFastToStringGenerated
 {{
-    public static class {symbol.Name}EnumExtensions
+    public static class {enumSymbol.Name}Extensions
     {{");
 
             //ToStringFast
-            ToStringFast(sourceBuilder, symbolName, e);
+            ToStringFast(sourceBuilder, symbolName, enumDeclarationSyntax);
 
             //IsDefined enum
-            IsDefinedEnum(sourceBuilder, symbolName, e);
+            IsDefinedEnum(sourceBuilder, symbolName, enumDeclarationSyntax);
 
             //IsDefined string
-            IsDefinedString(sourceBuilder, e, symbolName);
+            IsDefinedString(sourceBuilder, enumDeclarationSyntax, symbolName);
 
             //ToDisplay string
-            ToDisplay(sourceBuilder, symbolName, e, memberAttribute);
+            ToDisplay(sourceBuilder, symbolName, enumDeclarationSyntax, memberAttribute);
 
             //GetValues
-            GetValuesFast(sourceBuilder, symbolName, e);
+            GetValuesFast(sourceBuilder, symbolName, enumDeclarationSyntax);
 
             //GetNames
-            GetNamesFast(sourceBuilder, symbolName, e);
+            GetNamesFast(sourceBuilder, symbolName, enumDeclarationSyntax);
 
             //GetLength
-            GetLengthFast(sourceBuilder, symbolName, e);
+            GetLengthFast(sourceBuilder, symbolName, enumDeclarationSyntax);
 
             sourceBuilder.Append(@"
     }
 }
 ");
 
-            context.AddSource($"{symbol.Name}_EnumGenerator.g.cs",
+            context.AddSource($"{enumSymbol.Name}_EnumGenerator.g.cs",
                 SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
         }
     }
@@ -240,10 +262,8 @@ namespace {SourceGeneratorHelper.NameSpace}
         sourceBuilder.Append($@"
         public static int {SourceGeneratorHelper.ExtensionMethodNameGetLength}()
         {{
-            return {e.Members.Count};
-");
+            return {e.Members.Count};");
 
-        sourceBuilder.Append(@"
-        }");
+        sourceBuilder.Append(@"        }");
     }
 }

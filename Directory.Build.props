@@ -48,6 +48,9 @@
         <!-- Embed source files that are not tracked by the source control manager in the PDB -->
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+
+        <DebugType>embedded</DebugType>
+        <NoPackageAnalysis>true</NoPackageAnalysis>
     </PropertyGroup>
 
 

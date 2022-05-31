@@ -2,6 +2,7 @@
 using EnumFastToStringGenerated;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Supernova.Enum.Generators;
 
 namespace UnitTests;
 
@@ -19,10 +20,13 @@ public enum UserTypeTest
 [TestClass]
 public class EnumGeneratorTest
 {
+    public EnumGeneratorTest()
+    {
+    }
     [TestMethod]
     public void TestEnumDefined()
     {
-        var defined = UserTypeTestEnumExtensions.IsDefinedFast("Men");
+        var defined = UserTypeTestExtensions.IsDefinedFast("Men");
 
         Assert.IsTrue(defined);
     }
@@ -54,7 +58,7 @@ public class EnumGeneratorTest
     [TestMethod]
     public void TestEnumGetNames()
     {
-        var names = UserTypeTestEnumExtensions.GetNamesFast();
+        var names = UserTypeTestExtensions.GetNamesFast();
 
         Assert.IsNotNull(names);
         names.Should().NotBeEmpty()
@@ -66,7 +70,7 @@ public class EnumGeneratorTest
     [TestMethod]
     public void TestEnumGetValues()
     {
-        var values = UserTypeTestEnumExtensions.GetValuesFast();
+        var values = UserTypeTestExtensions.GetValuesFast();
 
         Assert.IsNotNull(values);
         values.Should().NotBeEmpty()
@@ -78,8 +82,8 @@ public class EnumGeneratorTest
     [TestMethod]
     public void TestEnumGetLength()
     {
-        var length = UserTypeTestEnumExtensions.GetLengthFast();
-        
+        var length = UserTypeTestExtensions.GetLengthFast();
+
         Assert.AreEqual(3, length);
     }
 }
