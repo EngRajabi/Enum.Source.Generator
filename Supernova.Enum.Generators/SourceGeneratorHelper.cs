@@ -13,7 +13,7 @@ using System;
 
     public const string NameSpace = "EnumFastToStringGenerated";
     public const string AttributeName = "EnumGenerator";
-    public const string ExtensionMethodNameToString = "StringToFast";
+    public const string ExtensionMethodNameToString = "ToStringFast";
     public const string ExtensionMethodNameIsDefined = "IsDefinedFast";
     public const string ExtensionMethodNameToDisplay = "ToDisplayFast";
     public const string ExtensionMethodNameGetValues = "GetValuesFast";

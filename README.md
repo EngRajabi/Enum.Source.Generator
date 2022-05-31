@@ -40,7 +40,7 @@ For example:
 ```csharp
     public static class UserTypeTestEnumExtensions
     {
-        public static string StringToFast(this UnitTests.UserTypeTest states)
+        public static string ToStringFast(this UnitTests.UserTypeTest states)
         {
             return states switch
             {
@@ -110,7 +110,7 @@ You do not see this file inside the project. But you can use it.
 
 Usage
 ```csharp
-var stringEnum = UserTypeTest.Men.StringToFast(); //Men;
+var stringEnum = UserTypeTest.Men.ToStringFast(); //Men;
 
 var isDefined = UserTypeTestEnumExtensions.IsDefinedFast(UserType.Men); //true;
 
