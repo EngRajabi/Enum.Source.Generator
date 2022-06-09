@@ -101,8 +101,9 @@ namespace {SourceGeneratorHelper.NameSpace}
 {{
     public static class {symbol.Name}EnumExtensions
     {{");
-            GetValuesFast1(sourceBuilder, symbolName, e);
-            GetNamesFast1(sourceBuilder, symbolName, e);
+            // lazy init
+            PrepareValues(sourceBuilder, symbolName, e);
+            PrepareNames(sourceBuilder, symbolName, e);
 
             //ToStringFast
             ToStringFast(sourceBuilder, symbolName, e);
@@ -222,7 +223,7 @@ namespace {SourceGeneratorHelper.NameSpace}
         }}");
     }
 
-    private static void GetValuesFast1(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    private static void PrepareValues(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
         private static readonly System.Lazy<System.Collections.Immutable.ImmutableArray<{symbolName}>> _values = new System.Lazy<System.Collections.Immutable.ImmutableArray<{symbolName}>>(
@@ -238,7 +239,7 @@ namespace {SourceGeneratorHelper.NameSpace}
 ");
     }
 
-    private static void GetNamesFast1(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    private static void PrepareNames(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
         private static readonly System.Lazy<System.Collections.Immutable.ImmutableArray<string>> _names = new System.Lazy<System.Collections.Immutable.ImmutableArray<string>>(
