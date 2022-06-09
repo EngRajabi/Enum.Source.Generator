@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -98,6 +99,11 @@ namespace {SourceGeneratorHelper.NameSpace}
 {{
     public static class {symbol.Name}EnumExtensions
     {{");
+            // _values field
+            AddValues(sourceBuilder, symbolName, e);
+            
+            // _names field
+            AddNames(sourceBuilder, symbolName, e);
 
             //ToStringFast
             ToStringFast(sourceBuilder, symbolName, e);
@@ -112,13 +118,13 @@ namespace {SourceGeneratorHelper.NameSpace}
             ToDisplay(sourceBuilder, symbolName, e, memberAttribute);
 
             //GetValues
-            GetValuesFast(sourceBuilder, symbolName, e);
+            GetValuesFast(sourceBuilder, symbolName);
 
             //GetNames
-            GetNamesFast(sourceBuilder, symbolName, e);
+            GetNamesFast(sourceBuilder);
 
             //GetLength
-            GetLengthFast(sourceBuilder, symbolName, e);
+            GetLengthFast(sourceBuilder, e);
 
             sourceBuilder.Append(@"
     }
@@ -128,6 +134,30 @@ namespace {SourceGeneratorHelper.NameSpace}
             context.AddSource($"{symbol.Name}_EnumGenerator.g.cs",
                 SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
         }
+    }
+
+    private void AddNames(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    {
+        sourceBuilder.Append(@"
+        private static string[] _names = new[]
+        {
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}),");
+
+        sourceBuilder.Append(@"        };");
+    }
+
+    private void AddValues(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    {
+        sourceBuilder.Append($@"
+        private static {symbolName}[] _values = new[]
+        {{
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine($@"                {symbolName}.{member},");
+
+        sourceBuilder.Append(@"        };");
     }
 
     private static void ToDisplay(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
@@ -205,45 +235,30 @@ namespace {SourceGeneratorHelper.NameSpace}
         }");
     }
 
-    private static void GetValuesFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    private static void GetValuesFast(StringBuilder sourceBuilder, string symbolName)
     {
         sourceBuilder.Append($@"
         public static {symbolName}[] {SourceGeneratorHelper.ExtensionMethodNameGetValues}()
         {{
-            return new[]
-            {{
-");
-        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-            sourceBuilder.AppendLine($@"                {symbolName}.{member},");
-
-        sourceBuilder.Append(@"            };
-        }");
+            return _values;
+        }}");
     }
 
-    private static void GetNamesFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    private static void GetNamesFast(StringBuilder sourceBuilder)
     {
         sourceBuilder.Append($@"
         public static string[] {SourceGeneratorHelper.ExtensionMethodNameGetNames}()
         {{
-            return new[]
-            {{
-");
-        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-            sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}),");
-
-        sourceBuilder.Append(@"            };
-        }");
+            return _names;
+        }}");
     }
 
-    private static void GetLengthFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    private static void GetLengthFast(StringBuilder sourceBuilder, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
         public static int {SourceGeneratorHelper.ExtensionMethodNameGetLength}()
         {{
             return {e.Members.Count};
-");
-
-        sourceBuilder.Append(@"
-        }");
+        }}");
     }
 }
