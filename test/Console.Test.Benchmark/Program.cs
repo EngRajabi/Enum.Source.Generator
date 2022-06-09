@@ -11,6 +11,7 @@ using BenchmarkDotNet.Running;
 using EnumFastToStringGenerated;
 using Perfolizer.Horology;
 using System;
+using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
@@ -104,7 +105,7 @@ public class EnumBenchmark
     }
 
     [Benchmark]
-    public UserType[] FastGetValues()
+    public ImmutableArray<UserType> FastGetValues()
     {
         return UserTypeEnumExtensions.GetValuesFast();
     }
@@ -116,7 +117,7 @@ public class EnumBenchmark
     }
 
     [Benchmark]
-    public string[] FastGetNames()
+    public ImmutableArray<string> FastGetNames()
     {
         return UserTypeEnumExtensions.GetNamesFast();
     }
