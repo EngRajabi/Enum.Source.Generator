@@ -11,7 +11,6 @@ using BenchmarkDotNet.Running;
 using EnumFastToStringGenerated;
 using Perfolizer.Horology;
 using System;
-using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
