@@ -213,45 +213,56 @@ namespace {SourceGeneratorHelper.NameSpace}
     private static void GetValuesFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
-        public static ImmutableArray<{symbolName}> {SourceGeneratorHelper.ExtensionMethodNameGetValues}()
+        public static {symbolName}[] {SourceGeneratorHelper.ExtensionMethodNameGetValues}()
         {{
-            return _values.Value;
+            var result = _valuesArray.Value;
+            var array = _values.Value;
+            array.CopyTo(result);
+            return result;
         }}");
     }
 
     private static void GetValuesFast1(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
-        private static readonly Lazy<ImmutableArray<{symbolName}>> _values = new Lazy<ImmutableArray<{symbolName}>>(
-            () => ImmutableArray.Create(new[]
+        private static readonly System.Lazy<System.Collections.Immutable.ImmutableArray<{symbolName}>> _values = new System.Lazy<System.Collections.Immutable.ImmutableArray<{symbolName}>>(
+            () => System.Collections.Immutable.ImmutableArray.Create<{symbolName}>(new[]
             {{
 ");
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
             sourceBuilder.AppendLine($@"                {symbolName}.{member},");
 
-        sourceBuilder.Append(@"            }));");
+        sourceBuilder.Append($@"            }}));
+
+        private static readonly System.Lazy<{symbolName}[]> _valuesArray = new System.Lazy<{symbolName}[]>(() => new {symbolName}[_values.Value.Length]);
+");
     }
 
     private static void GetNamesFast1(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
-        private static readonly Lazy<ImmutableArray<string>> _names = new Lazy<ImmutableArray<string>>(
-            () => ImmutableArray.Create(new[]
+        private static readonly System.Lazy<System.Collections.Immutable.ImmutableArray<string>> _names = new System.Lazy<System.Collections.Immutable.ImmutableArray<string>>(
+            () => System.Collections.Immutable.ImmutableArray.Create<string>(new[]
             {{
 ");
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
             sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}),");
 
         sourceBuilder.Append(@"            }));
+
+        private static readonly System.Lazy<string[]> _namesArray = new System.Lazy<string[]>(() => new string[_names.Value.Length]);
 ");
     }
 
     private static void GetNamesFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
-        public static ImmutableArray<string> {SourceGeneratorHelper.ExtensionMethodNameGetNames}()
+        public static string[] {SourceGeneratorHelper.ExtensionMethodNameGetNames}()
         {{
-            return _names.Value;
+            var result = _namesArray.Value;
+            var array = _names.Value;
+            array.CopyTo(result);
+            return result;
         }}");
     }
 

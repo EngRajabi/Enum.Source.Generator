@@ -105,7 +105,7 @@ public class EnumBenchmark
     }
 
     [Benchmark]
-    public ImmutableArray<UserType> FastGetValues()
+    public UserType[] FastGetValues()
     {
         return UserTypeEnumExtensions.GetValuesFast();
     }
@@ -117,7 +117,7 @@ public class EnumBenchmark
     }
 
     [Benchmark]
-    public ImmutableArray<string> FastGetNames()
+    public string[] FastGetNames()
     {
         return UserTypeEnumExtensions.GetNamesFast();
     }
