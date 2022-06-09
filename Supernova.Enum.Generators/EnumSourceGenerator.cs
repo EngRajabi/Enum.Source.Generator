@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -17,12 +18,12 @@ public class EnumSourceGenerator : ISourceGenerator
 
     public void Execute(GeneratorExecutionContext context)
     {
-        //#if DEBUG
-        //        if (!Debugger.IsAttached)
-        //        {
-        //            Debugger.Launch();
-        //        }
-        //#endif
+//#if DEBUG
+//        if (!Debugger.IsAttached)
+//        {
+//            Debugger.Launch();
+//        }
+//#endif
         context.AddSource($"{SourceGeneratorHelper.AttributeName}Attribute.g.cs", SourceText.From($@"using System;
 namespace {SourceGeneratorHelper.NameSpace}
 {{
@@ -94,10 +95,15 @@ namespace {SourceGeneratorHelper.NameSpace}
             }
 
             var sourceBuilder = new StringBuilder($@"using System;
+using System.Collections.Immutable;
+
 namespace {SourceGeneratorHelper.NameSpace}
 {{
     public static class {symbol.Name}EnumExtensions
     {{");
+            // lazy init
+            PrepareValues(sourceBuilder, symbolName, e);
+            PrepareNames(sourceBuilder, symbolName, e);
 
             //ToStringFast
             ToStringFast(sourceBuilder, symbolName, e);
@@ -118,7 +124,7 @@ namespace {SourceGeneratorHelper.NameSpace}
             GetNamesFast(sourceBuilder, symbolName, e);
 
             //GetLength
-            GetLengthFast(sourceBuilder, symbolName, e);
+            GetLengthFast(sourceBuilder, e);
 
             sourceBuilder.Append(@"
     }
@@ -129,7 +135,7 @@ namespace {SourceGeneratorHelper.NameSpace}
                 SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
         }
     }
-
+    
     private static void ToDisplay(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
         Dictionary<string, string> memberAttribute)
     {
@@ -168,7 +174,7 @@ namespace {SourceGeneratorHelper.NameSpace}
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
             sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}) => true,");
         sourceBuilder.Append(
-            @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            @"                _ => false,
             };
         }");
     }
@@ -184,7 +190,7 @@ namespace {SourceGeneratorHelper.NameSpace}
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
             sourceBuilder.AppendLine($@"                {symbolName}.{member} => true,");
         sourceBuilder.Append(
-            @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            @"                _ => false,
             };
         }");
     }
@@ -210,14 +216,43 @@ namespace {SourceGeneratorHelper.NameSpace}
         sourceBuilder.Append($@"
         public static {symbolName}[] {SourceGeneratorHelper.ExtensionMethodNameGetValues}()
         {{
-            return new[]
+            var result = _valuesArray.Value;
+            var array = _values.Value;
+            array.CopyTo(result);
+            return result;
+        }}");
+    }
+
+    private static void PrepareValues(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    {
+        sourceBuilder.Append($@"
+        private static readonly System.Lazy<System.Collections.Immutable.ImmutableArray<{symbolName}>> _values = new System.Lazy<System.Collections.Immutable.ImmutableArray<{symbolName}>>(
+            () => System.Collections.Immutable.ImmutableArray.Create<{symbolName}>(new[]
             {{
 ");
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
             sourceBuilder.AppendLine($@"                {symbolName}.{member},");
 
-        sourceBuilder.Append(@"            };
-        }");
+        sourceBuilder.Append($@"            }}));
+
+        private static readonly System.Lazy<{symbolName}[]> _valuesArray = new System.Lazy<{symbolName}[]>(() => new {symbolName}[_values.Value.Length]);
+");
+    }
+
+    private static void PrepareNames(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    {
+        sourceBuilder.Append($@"
+        private static readonly System.Lazy<System.Collections.Immutable.ImmutableArray<string>> _names = new System.Lazy<System.Collections.Immutable.ImmutableArray<string>>(
+            () => System.Collections.Immutable.ImmutableArray.Create<string>(new[]
+            {{
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}),");
+
+        sourceBuilder.Append(@"            }));
+
+        private static readonly System.Lazy<string[]> _namesArray = new System.Lazy<string[]>(() => new string[_names.Value.Length]);
+");
     }
 
     private static void GetNamesFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
@@ -225,25 +260,19 @@ namespace {SourceGeneratorHelper.NameSpace}
         sourceBuilder.Append($@"
         public static string[] {SourceGeneratorHelper.ExtensionMethodNameGetNames}()
         {{
-            return new[]
-            {{
-");
-        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-            sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}),");
-
-        sourceBuilder.Append(@"            };
-        }");
+            var result = _namesArray.Value;
+            var array = _names.Value;
+            array.CopyTo(result);
+            return result;
+        }}");
     }
 
-    private static void GetLengthFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    private static void GetLengthFast(StringBuilder sourceBuilder, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
         public static int {SourceGeneratorHelper.ExtensionMethodNameGetLength}()
         {{
             return {e.Members.Count};
-");
-
-        sourceBuilder.Append(@"
-        }");
+        }}");
     }
 }
