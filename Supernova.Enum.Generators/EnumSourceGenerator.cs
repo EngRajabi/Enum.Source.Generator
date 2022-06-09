@@ -95,6 +95,8 @@ namespace {SourceGeneratorHelper.NameSpace}
             }
 
             var sourceBuilder = new StringBuilder($@"using System;
+using System.Collections.Immutable;
+
 namespace {SourceGeneratorHelper.NameSpace}
 {{
     public static class {symbol.Name}EnumExtensions
@@ -139,25 +141,25 @@ namespace {SourceGeneratorHelper.NameSpace}
     private void AddNames(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append(@"
-        private static string[] _names = new[]
+        private static ImmutableArray<string> _names = ImmutableArray.Create(new[]
         {
 ");
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
             sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}),");
 
-        sourceBuilder.Append(@"        };");
+        sourceBuilder.Append(@"        });");
     }
 
     private void AddValues(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
-        private static {symbolName}[] _values = new[]
+        private static ImmutableArray<{symbolName}> _values = ImmutableArray.Create(new[]
         {{
 ");
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
             sourceBuilder.AppendLine($@"                {symbolName}.{member},");
 
-        sourceBuilder.Append(@"        };");
+        sourceBuilder.Append(@"        });");
     }
 
     private static void ToDisplay(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
@@ -238,7 +240,7 @@ namespace {SourceGeneratorHelper.NameSpace}
     private static void GetValuesFast(StringBuilder sourceBuilder, string symbolName)
     {
         sourceBuilder.Append($@"
-        public static {symbolName}[] {SourceGeneratorHelper.ExtensionMethodNameGetValues}()
+        public static ImmutableArray<{symbolName}> {SourceGeneratorHelper.ExtensionMethodNameGetValues}()
         {{
             return _values;
         }}");
@@ -247,7 +249,7 @@ namespace {SourceGeneratorHelper.NameSpace}
     private static void GetNamesFast(StringBuilder sourceBuilder)
     {
         sourceBuilder.Append($@"
-        public static string[] {SourceGeneratorHelper.ExtensionMethodNameGetNames}()
+        public static ImmutableArray<string> {SourceGeneratorHelper.ExtensionMethodNameGetNames}()
         {{
             return _names;
         }}");
