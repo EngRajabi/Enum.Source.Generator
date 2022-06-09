@@ -18,12 +18,12 @@ public class EnumSourceGenerator : ISourceGenerator
 
     public void Execute(GeneratorExecutionContext context)
     {
-        //#if DEBUG
-        //        if (!Debugger.IsAttached)
-        //        {
-        //            Debugger.Launch();
-        //        }
-        //#endif
+//#if DEBUG
+//        if (!Debugger.IsAttached)
+//        {
+//            Debugger.Launch();
+//        }
+//#endif
         context.AddSource($"{SourceGeneratorHelper.AttributeName}Attribute.g.cs", SourceText.From($@"using System;
 namespace {SourceGeneratorHelper.NameSpace}
 {{
@@ -101,11 +101,8 @@ namespace {SourceGeneratorHelper.NameSpace}
 {{
     public static class {symbol.Name}EnumExtensions
     {{");
-            // _values field
-            AddValues(sourceBuilder, symbolName, e);
-            
-            // _names field
-            AddNames(sourceBuilder, symbolName, e);
+            GetValuesFast1(sourceBuilder, symbolName, e);
+            GetNamesFast1(sourceBuilder, symbolName, e);
 
             //ToStringFast
             ToStringFast(sourceBuilder, symbolName, e);
@@ -120,10 +117,10 @@ namespace {SourceGeneratorHelper.NameSpace}
             ToDisplay(sourceBuilder, symbolName, e, memberAttribute);
 
             //GetValues
-            GetValuesFast(sourceBuilder, symbolName);
+            GetValuesFast(sourceBuilder, symbolName, e);
 
             //GetNames
-            GetNamesFast(sourceBuilder);
+            GetNamesFast(sourceBuilder, symbolName, e);
 
             //GetLength
             GetLengthFast(sourceBuilder, e);
@@ -137,31 +134,7 @@ namespace {SourceGeneratorHelper.NameSpace}
                 SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
         }
     }
-
-    private void AddNames(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
-    {
-        sourceBuilder.Append(@"
-        private static ImmutableArray<string> _names = ImmutableArray.Create(new[]
-        {
-");
-        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-            sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}),");
-
-        sourceBuilder.Append(@"        });");
-    }
-
-    private void AddValues(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
-    {
-        sourceBuilder.Append($@"
-        private static ImmutableArray<{symbolName}> _values = ImmutableArray.Create(new[]
-        {{
-");
-        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-            sourceBuilder.AppendLine($@"                {symbolName}.{member},");
-
-        sourceBuilder.Append(@"        });");
-    }
-
+    
     private static void ToDisplay(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
         Dictionary<string, string> memberAttribute)
     {
@@ -237,21 +210,48 @@ namespace {SourceGeneratorHelper.NameSpace}
         }");
     }
 
-    private static void GetValuesFast(StringBuilder sourceBuilder, string symbolName)
+    private static void GetValuesFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
         public static ImmutableArray<{symbolName}> {SourceGeneratorHelper.ExtensionMethodNameGetValues}()
         {{
-            return _values;
+            return _values.Value;
         }}");
     }
 
-    private static void GetNamesFast(StringBuilder sourceBuilder)
+    private static void GetValuesFast1(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    {
+        sourceBuilder.Append($@"
+        private static readonly Lazy<ImmutableArray<{symbolName}>> _values = new Lazy<ImmutableArray<{symbolName}>>(
+            () => ImmutableArray.Create(new[]
+            {{
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine($@"                {symbolName}.{member},");
+
+        sourceBuilder.Append(@"            }));");
+    }
+
+    private static void GetNamesFast1(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    {
+        sourceBuilder.Append($@"
+        private static readonly Lazy<ImmutableArray<string>> _names = new Lazy<ImmutableArray<string>>(
+            () => ImmutableArray.Create(new[]
+            {{
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}),");
+
+        sourceBuilder.Append(@"            }));
+");
+    }
+
+    private static void GetNamesFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
         public static ImmutableArray<string> {SourceGeneratorHelper.ExtensionMethodNameGetNames}()
         {{
-            return _names;
+            return _names.Value;
         }}");
     }
 
