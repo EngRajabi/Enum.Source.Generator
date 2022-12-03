@@ -45,6 +45,14 @@ public class EnumGeneratorTest
     }
 
     [TestMethod]
+    public void TestEnumToString_Undefined()
+    {
+        var action = () => GetUndefinedEnumValue().ToStringFast();
+
+        action.Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [TestMethod]
     public void TestEnumToDisplay()
     {
         var menString = UserTypeTest.Men.ToDisplayFast();
@@ -58,6 +66,14 @@ public class EnumGeneratorTest
         var menString = UserTypeTest.None.ToDisplayFast();
 
         Assert.AreEqual("None", menString);
+    }
+
+    [TestMethod]
+    public void TestEnumToDisplay_Undefined()
+    {
+        var action = () => GetUndefinedEnumValue().ToDisplayFast();
+
+        action.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [TestMethod]
@@ -91,4 +107,6 @@ public class EnumGeneratorTest
 
         Assert.AreEqual(Enum.GetValues<UserTypeTest>().Length, length);
     }
+
+    private UserTypeTest GetUndefinedEnumValue() => (UserTypeTest)(-1);
 }
