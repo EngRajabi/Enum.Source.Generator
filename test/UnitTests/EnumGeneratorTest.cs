@@ -29,6 +29,14 @@ public class EnumGeneratorTest
     }
 
     [TestMethod]
+    public void TestEnumDefined_Undefined()
+    {
+        var defined = UserTypeTestEnumExtensions.IsDefinedFast("DoesNotExist");
+
+        Assert.IsFalse(defined);
+    }
+
+    [TestMethod]
     public void TestEnumToString()
     {
         var menString = UserTypeTest.Men.ToStringFast();
