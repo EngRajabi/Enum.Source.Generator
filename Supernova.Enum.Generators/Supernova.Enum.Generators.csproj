@@ -5,15 +5,15 @@
       <PackageId>Supernova.Enum.Generators</PackageId>
       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
       <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-      <Version>1.0.12</Version>
-      <PackageVersion>1.0.12</PackageVersion>
-      <AssemblyVersion>1.0.12</AssemblyVersion>
+      <Version>1.0.13</Version>
+      <PackageVersion>1.0.13</PackageVersion>
+      <AssemblyVersion>1.0.13</AssemblyVersion>
       <PackageReadmeFile>README.md</PackageReadmeFile>
       <PackageIcon>icon.png</PackageIcon>
       <PackageReleaseNotes>
-          v1.0.12
+          v1.0.13
           Breaking changes
-          - rename StringToFast to ToStringFast
+          - return false for not found enum to IsDefinedFast
       </PackageReleaseNotes>
   </PropertyGroup>
 
