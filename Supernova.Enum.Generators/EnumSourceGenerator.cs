@@ -168,7 +168,7 @@ namespace {SourceGeneratorHelper.NameSpace}
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
             sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}) => true,");
         sourceBuilder.Append(
-            @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            @"                _ => false
             };
         }");
     }
@@ -184,7 +184,7 @@ namespace {SourceGeneratorHelper.NameSpace}
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
             sourceBuilder.AppendLine($@"                {symbolName}.{member} => true,");
         sourceBuilder.Append(
-            @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            @"                _ => false
             };
         }");
     }

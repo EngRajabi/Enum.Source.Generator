@@ -57,7 +57,7 @@ For example:
                 UnitTests.UserTypeTest.Men => true,
                 UnitTests.UserTypeTest.Women => true,
                 UnitTests.UserTypeTest.None => true,
-                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+                _ => false
             };
         }
         public static bool IsDefinedFast(string states)
@@ -67,7 +67,7 @@ For example:
                 nameof(UnitTests.UserTypeTest.Men) => true,
                 nameof(UnitTests.UserTypeTest.Women) => true,
                 nameof(UnitTests.UserTypeTest.None) => true,
-                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+                _ => false
             };
         }
         public static string ToDisplayFast(this UnitTests.UserTypeTest states)
