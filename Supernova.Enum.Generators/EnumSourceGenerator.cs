@@ -71,7 +71,8 @@ namespace {SourceGeneratorHelper.NameSpace}
 
 
             /**********************/
-            var memberAttribute = new Dictionary<string, string>();
+            var enumDisplayNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var enumDescriptions = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             foreach (var member in enumSymbol.GetMembers())
             {
                 if (member is not IFieldSymbol field
@@ -84,21 +85,36 @@ namespace {SourceGeneratorHelper.NameSpace}
                         attribute.AttributeClass.Name != "DisplayAttribute") continue;
 
                     foreach (var namedArgument in attribute.NamedArguments)
+                    {
                         if (namedArgument.Key.Equals("Name", StringComparison.OrdinalIgnoreCase) &&
-                            namedArgument.Value.Value?.ToString() is { } dn)
+                         namedArgument.Value.Value?.ToString() is { } displayName)
                         {
-                            memberAttribute.Add(member.Name, dn);
-                            break;
+                            enumDisplayNames.Add(member.Name, displayName);
+                        } 
+                        if (namedArgument.Key.Equals("Description", StringComparison.OrdinalIgnoreCase) &&
+                         namedArgument.Value.Value?.ToString() is { } description)
+                        {
+                            enumDescriptions.Add(member.Name, description);
                         }
+                        
+                    }
                 }
             }
 
             var sourceBuilder = new StringBuilder($@"using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 namespace {SourceGeneratorHelper.NameSpace}
 {{
     public static class {symbol.Name}EnumExtensions
     {{");
 
+            //DisplayNames Dictionary
+            DisplayNamesDictionary(sourceBuilder, symbolName, e, enumDisplayNames);
+            
+            //DisplayDescriptions Dictionary
+            DisplayDescriptionsDictionary(sourceBuilder, symbolName, e, enumDescriptions);
+            
             //ToStringFast
             ToStringFast(sourceBuilder, symbolName, e);
 
@@ -109,7 +125,10 @@ namespace {SourceGeneratorHelper.NameSpace}
             IsDefinedString(sourceBuilder, e, symbolName);
 
             //ToDisplay string
-            ToDisplay(sourceBuilder, symbolName, e, memberAttribute);
+            ToDisplay(sourceBuilder, symbolName, e, enumDisplayNames);
+
+            //ToDisplay string
+            ToDescription(sourceBuilder, symbolName, e, enumDescriptions);
 
             //GetValues
             GetValuesFast(sourceBuilder, symbolName, e);
@@ -131,28 +150,51 @@ namespace {SourceGeneratorHelper.NameSpace}
     }
 
     private static void ToDisplay(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
-        Dictionary<string, string> memberAttribute)
+        Dictionary<string, string> enumDisplayNames)
     {
         sourceBuilder.Append($@"
-        public static string {SourceGeneratorHelper.ExtensionMethodNameToDisplay}(this {symbolName} states)
+        public static string {SourceGeneratorHelper.ExtensionMethodNameToDisplay}(this {symbolName} states, string defaultValue = null)
         {{
             return states switch
             {{
 ");
         foreach (var member in e.Members)
         {
-            var display = memberAttribute
-                              .FirstOrDefault(r =>
-                                  r.Key.Equals(member.Identifier.ValueText, StringComparison.OrdinalIgnoreCase))
-                              .Value
-                          ?? member.Identifier.ValueText;
-
+            var key = member.Identifier.ValueText;
+            var enumDisplayName = enumDisplayNames.TryGetValue(key, out var found)
+                ? found
+                : key;
             sourceBuilder.AppendLine(
-                $@"                {symbolName}.{member.Identifier.ValueText} => ""{display}"",");
+                $@"                {symbolName}.{member.Identifier.ValueText} => ""{enumDisplayName ?? key}"",");
         }
 
         sourceBuilder.Append(
-            @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            @"                _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            };
+        }");
+    }
+
+    private static void ToDescription(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
+        Dictionary<string, string> enumDescriptions)
+    {
+        sourceBuilder.Append($@"
+        public static string {SourceGeneratorHelper.ExtensionMethodNameToDescription}(this {symbolName} states, string defaultValue = null)
+        {{
+            return states switch
+            {{
+");
+        foreach (var member in e.Members)
+        {
+            var key = member.Identifier.ValueText;
+            var enumDescription = enumDescriptions.TryGetValue(key, out var found)
+                ? found
+                : key;
+            sourceBuilder.AppendLine(
+                $@"                {symbolName}.{member.Identifier.ValueText} => ""{enumDescription ?? key}"",");
+        }
+
+        sourceBuilder.Append(
+            @"                _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }");
     }
@@ -192,7 +234,7 @@ namespace {SourceGeneratorHelper.NameSpace}
     private static void ToStringFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
-        public static string {SourceGeneratorHelper.ExtensionMethodNameToString}(this {symbolName} states)
+        public static string {SourceGeneratorHelper.ExtensionMethodNameToString}(this {symbolName} states, string defaultValue = null)
         {{
             return states switch
             {{
@@ -200,9 +242,53 @@ namespace {SourceGeneratorHelper.NameSpace}
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
             sourceBuilder.AppendLine($@"                {symbolName}.{member} => nameof({symbolName}.{member}),");
         sourceBuilder.Append(
-            @"                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            @"                _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }");
+    }
+
+    private static void DisplayNamesDictionary(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
+        Dictionary<string, string> enumDisplayNames)
+    {
+        sourceBuilder.Append($@"
+        public static readonly ImmutableDictionary<{symbolName}, string> {SourceGeneratorHelper.PropertyDisplayNamesDictionary} = new Dictionary<{symbolName}, string>
+        {{
+");
+        foreach (var member in e.Members)
+        {
+            var key = member.Identifier.ValueText;
+            var enumDisplayName = enumDisplayNames.TryGetValue(key, out var found)
+                ? found
+                : key;
+            sourceBuilder.AppendLine(
+                $@"                {{{symbolName}.{member.Identifier.ValueText}, ""{enumDisplayName ?? key}""}},");
+        }
+        sourceBuilder.Append(
+            @"
+        }.ToImmutableDictionary();
+");
+    }
+
+    private static void DisplayDescriptionsDictionary(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
+        Dictionary<string, string> enumDescriptionNames)
+    {
+        sourceBuilder.Append($@"
+        public static readonly ImmutableDictionary<{symbolName}, string> {SourceGeneratorHelper.PropertyDisplayDescriptionsDictionary} = new Dictionary<{symbolName}, string>
+        {{
+");
+        foreach (var member in e.Members)
+        {
+            var key = member.Identifier.ValueText;
+            var enumDescription = enumDescriptionNames.TryGetValue(key, out var found)
+                ? found
+                : key;
+            sourceBuilder.AppendLine(
+                $@"                {{{symbolName}.{member.Identifier.ValueText}, ""{enumDescription ?? key}""}},");
+        }
+        sourceBuilder.Append(
+            @"
+        }.ToImmutableDictionary();
+");
     }
 
     private static void GetValuesFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
