@@ -30,11 +30,9 @@ To use the generator, add the `[EnumGenerator]` attribute to an enum. For exampl
 [EnumGenerator]
 public enum UserTypeTest
 {
-    [Display(Name = "مرد")]
-    Men,
+    [Display(Name = "مرد", Description = "Descمرد")] Men = 3,
 
-    [Display(Name = "زن")]
-    Women,
+    [Display(Name = "زن", Description = "Descزن")] Women = 4,
 
     //[Display(Name = "نامشخص")]
     None
@@ -47,14 +45,14 @@ For example:
 ```csharp
     public static class UserTypeTestEnumExtensions
     {
-        public static string ToStringFast(this UnitTests.UserTypeTest states)
+        public static string ToStringFast(this UnitTests.UserTypeTest states, string defaultValue = null)
         {
             return states switch
             {
                 UnitTests.UserTypeTest.Men => nameof(UnitTests.UserTypeTest.Men),
                 UnitTests.UserTypeTest.Women => nameof(UnitTests.UserTypeTest.Women),
                 UnitTests.UserTypeTest.None => nameof(UnitTests.UserTypeTest.None),
-                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+                _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }
         public static bool IsDefinedFast(UnitTests.UserTypeTest states)
@@ -77,16 +75,28 @@ For example:
                 _ => false
             };
         }
-        public static string ToDisplayFast(this UnitTests.UserTypeTest states)
+        public static string ToDisplayFast(this UnitTests.UserTypeTest states, string defaultValue = null)
         {
             return states switch
             {
                 UnitTests.UserTypeTest.Men => "مرد",
                 UnitTests.UserTypeTest.Women => "زن",
                 UnitTests.UserTypeTest.None => "None",
-                _ => throw new ArgumentOutOfRangeException(nameof(states), states, null)
+                _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }
+        
+        public static string ToDescriptionFast(this UnitTests.UserTypeTest states, string defaultValue = null)
+        {
+            return states switch
+            {
+                UnitTests.UserTypeTest.Men => "Descمرد",
+                UnitTests.UserTypeTest.Women => "Descزن",
+                UnitTests.UserTypeTest.None => "None",
+                _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            };
+        }
+        
         public static UnitTests.UserTypeTest[] GetValuesFast()
         {
             return new[]
