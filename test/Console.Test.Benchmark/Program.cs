@@ -21,9 +21,9 @@ namespace Console.Test.Benchmark;
 [EnumGenerator]
 public enum UserType
 {
-    [Display(Name = "مرد")] Men,
+    [Display(Name = "مرد", Description = "men")] Men,
 
-    [Display(Name = "زن")] Women,
+    [Display(Name = "زن", Description = "women")] Women,
 
     //[Display(Name = "نامشخص")]
     None
@@ -45,7 +45,7 @@ public class Program
             .AddColumn(StatisticColumn.OperationsPerSecond)
             .AddColumn(BaselineRatioColumn.RatioMean)
             .AddColumn(RankColumn.Arabic)
-            .AddJob(Job.Default.WithRuntime(CoreRuntime.Core60)
+            .AddJob(Job.Default.WithRuntime(CoreRuntime.Core80)
                 .WithIterationCount(32)
                 .WithInvocationCount(64)
                 .WithIterationTime(TimeInterval.FromSeconds(120))
@@ -95,6 +95,18 @@ public class EnumBenchmark
     public string FastToDisplay()
     {
         return UserType.Men.ToDisplayFast();
+    }
+
+    [Benchmark]
+    public string NativeToDescription()
+    {
+        return UserType.Men.ToDescriptionNative();
+    }
+
+    [Benchmark]
+    public string FastToDescription()
+    {
+        return UserType.Men.ToDescriptionFast();
     }
 
     [Benchmark]
@@ -148,6 +160,21 @@ public static class Ext
             return value.ToString();
 
         var propValue = attribute.GetType().GetProperty("Name")?.GetValue(attribute, null);
+
+        return propValue?.ToString();
+    }
+    public static string ToDescriptionNative(this Enum value)
+    {
+        if (value is null)
+            throw new ArgumentNullException(nameof(value));
+
+        var attribute = value.GetType().GetField(value.ToString())?
+            .GetCustomAttributes<DisplayAttribute>(false).FirstOrDefault();
+
+        if (attribute == null)
+            return value.ToString();
+
+        var propValue = attribute.GetType().GetProperty("Description")?.GetValue(attribute, null);
 
         return propValue?.ToString();
     }
