@@ -10,11 +10,17 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ED0FBF28-B700-4E39-AA8A-4F9553E99351}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.gitignore = .gitignore
 		AssemblyInfo.cs = AssemblyInfo.cs
+		BannedSymbols.txt = BannedSymbols.txt
 		CHANGELOG.md = CHANGELOG.md
+		Clean.bat = Clean.bat
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
+		icon.png = icon.png
+		LICENSE = LICENSE
 		README.md = README.md
+		Supernova.Enum.Generators.png = Supernova.Enum.Generators.png
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "test\UnitTests\UnitTests.csproj", "{28CEBA67-8F05-4377-8049-3439CB6978CE}"
@@ -22,6 +28,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Supernova.Enum.Generators", "Supernova.Enum.Generators\Supernova.Enum.Generators.csproj", "{88902DA0-F625-4674-BE00-F363A785E4A7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console.Test.Benchmark", "test\Console.Test.Benchmark\Console.Test.Benchmark.csproj", "{0FEDCA69-2161-4D1E-89B9-3CD4E1E3CD57}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{8376A6BC-14BC-459E-A0A0-451A12E8E048}"
+	ProjectSection(SolutionItems) = preProject
+		.github\dependabot.yml = .github\dependabot.yml
+		.github\workflows\dotnetcore.yml = .github\workflows\dotnetcore.yml
+		.github\FUNDING.yml = .github\FUNDING.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +62,7 @@ Global
 		{28CEBA67-8F05-4377-8049-3439CB6978CE} = {360CDEDF-49F8-486D-9A78-001C2D875DC5}
 		{88902DA0-F625-4674-BE00-F363A785E4A7} = {A60E376C-0437-4383-80A1-0F444BAF5056}
 		{0FEDCA69-2161-4D1E-89B9-3CD4E1E3CD57} = {360CDEDF-49F8-486D-9A78-001C2D875DC5}
+		{8376A6BC-14BC-459E-A0A0-451A12E8E048} = {ED0FBF28-B700-4E39-AA8A-4F9553E99351}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {89B80459-89FC-4D46-AC8C-50DD80B99D18}

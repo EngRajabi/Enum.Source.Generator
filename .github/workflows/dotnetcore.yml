@@ -20,7 +20,7 @@ jobs:
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v2
         with:
-            dotnet-version: '6.0.300'
+            dotnet-version: '8.0.102'
 
       - name: Install Dependencies
         run: dotnet restore
