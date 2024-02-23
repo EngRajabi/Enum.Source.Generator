@@ -45,6 +45,22 @@ For example:
 ```csharp
     public static class UserTypeTestEnumExtensions
     {
+        public static readonly ImmutableDictionary<UnitTests.UserTypeTest, string> DisplayNamesDictionary = new Dictionary<UnitTests.UserTypeTest, string>
+        {
+                {UnitTests.UserTypeTest.Men, "مرد"},
+                {UnitTests.UserTypeTest.Women, "زن"},
+                {UnitTests.UserTypeTest.None, "None"},
+
+        }.ToImmutableDictionary();
+
+        public static readonly ImmutableDictionary<UnitTests.UserTypeTest, string> DisplayDescriptionsDictionary = new Dictionary<UnitTests.UserTypeTest, string>
+        {
+                {UnitTests.UserTypeTest.Men, "Descمرد"},
+                {UnitTests.UserTypeTest.Women, "Descزن"},
+                {UnitTests.UserTypeTest.None, "None"},
+
+        }.ToImmutableDictionary();
+
         public static string ToStringFast(this UnitTests.UserTypeTest states, string defaultValue = null)
         {
             return states switch
@@ -85,7 +101,6 @@ For example:
                 _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }
-        
         public static string ToDescriptionFast(this UnitTests.UserTypeTest states, string defaultValue = null)
         {
             return states switch
@@ -96,7 +111,6 @@ For example:
                 _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }
-        
         public static UnitTests.UserTypeTest[] GetValuesFast()
         {
             return new[]
@@ -132,6 +146,8 @@ var stringEnum = UserTypeTest.Men.ToStringFast(); //Men;
 var isDefined = UserTypeTestEnumExtensions.IsDefinedFast(UserType.Men); //true;
 
 var displayEnum = UserTypeTest.Men.ToDisplayFast(); //مرد
+
+var descriptionEnum = UserTypeTest.Men.ToDescriptionFast(); //Descمرد
 
 var names = UserTypeTestEnumExtensions.GetNamesFast(); //string[]
 
