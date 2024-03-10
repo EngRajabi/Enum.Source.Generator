@@ -106,7 +106,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 namespace {SourceGeneratorHelper.NameSpace}
 {{
-    public static class {symbol.Name}EnumExtensions
+    {symbol.DeclaredAccessibility.ToString("G").ToLower()} static class {symbol.Name}EnumExtensions
     {{");
 
             //DisplayNames Dictionary
