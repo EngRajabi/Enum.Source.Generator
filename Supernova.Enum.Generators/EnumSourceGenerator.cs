@@ -105,7 +105,7 @@ using System.Collections.Immutable;
 namespace {SourceGeneratorHelper.NameSpace}
 {{
     [GeneratedCodeAttribute(""Supernova.Enum.Generators"", null)]
-    public static class {symbol.Name}EnumExtensions
+    {{symbol.DeclaredAccessibility.ToString(""G"").ToLower()}} static class {symbol.Name}EnumExtensions
     {{");
 
             //DisplayNames Dictionary
