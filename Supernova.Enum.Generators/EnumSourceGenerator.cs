@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using Supernova.Enum.Generators.Extensions;
 
 namespace Supernova.Enum.Generators;
 
@@ -24,7 +25,7 @@ public class EnumSourceGenerator : ISourceGenerator
         //        }
         //#endif
         context.AddSource($"{SourceGeneratorHelper.AttributeName}Attribute.g.cs", SourceText.From($@"using System;
-namespace {SourceGeneratorHelper.NameSpace}
+namespace Supernova.Enum.Generators
 {{
     [AttributeUsage(AttributeTargets.Enum)]
     public sealed class {SourceGeneratorHelper.AttributeName}Attribute : Attribute
@@ -104,7 +105,8 @@ namespace {SourceGeneratorHelper.NameSpace}
             var sourceBuilder = new StringBuilder($@"using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-namespace {SourceGeneratorHelper.NameSpace}
+
+namespace {symbol.ContainingNamespace.FullName()}
 {{
     {symbol.DeclaredAccessibility.ToString("G").ToLower()} static class {symbol.Name}EnumExtensions
     {{");
