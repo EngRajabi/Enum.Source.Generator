@@ -3,7 +3,6 @@
 public static class SourceGeneratorHelper
 {
     public const string NameSpace = "EnumFastToStringGenerated";
-    public const string AttributeName = "EnumGenerator";
     public const string ExtensionMethodNameToString = "ToStringFast";
     public const string ExtensionMethodNameIsDefined = "IsDefinedFast";
     public const string ExtensionMethodNameToDisplay = "ToDisplayFast";
@@ -13,5 +12,4 @@ public static class SourceGeneratorHelper
     public const string ExtensionMethodNameGetLength = "GetLengthFast";
     public const string PropertyDisplayNamesDictionary = "DisplayNamesDictionary";
     public const string PropertyDisplayDescriptionsDictionary = "DisplayDescriptionsDictionary";
-
 }
