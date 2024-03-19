@@ -11,6 +11,9 @@ using System.CodeDom.Compiler;
 
 namespace " + SourceGeneratorHelper.NameSpace + @"
 {
+    /// <summary>
+    /// An attribute that marks enums for which extension methods are to be generated.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Enum)]
     [GeneratedCodeAttribute(""Supernova.Enum.Generators"", null)]
     public sealed class " + Name + @"Attribute : Attribute
