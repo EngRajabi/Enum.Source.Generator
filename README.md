@@ -43,8 +43,15 @@ This will generate a class called `EnumNameEnumExtensions` (`UserTypeTest` + `En
 For example:
 
 ```csharp
+
+    /// <summary>
+    /// Provides extension methods for operations related to the UserTypeTest enumeration.
+    /// </summary>
     public static class UserTypeTestEnumExtensions
     {
+        /// <summary>
+        /// Provides a dictionary that maps <see cref="UserTypeTest" /> values to their corresponding display names.
+        /// </summary>
         public static readonly ImmutableDictionary<UnitTests.UserTypeTest, string> DisplayNamesDictionary = new Dictionary<UnitTests.UserTypeTest, string>
         {
                 {UnitTests.UserTypeTest.Men, "مرد"},
@@ -53,6 +60,9 @@ For example:
 
         }.ToImmutableDictionary();
 
+        /// <summary>
+        /// Provides a dictionary that maps <see cref="UserTypeTest" /> values to their corresponding descriptions.
+        /// </summary>
         public static readonly ImmutableDictionary<UnitTests.UserTypeTest, string> DisplayDescriptionsDictionary = new Dictionary<UnitTests.UserTypeTest, string>
         {
                 {UnitTests.UserTypeTest.Men, "Descمرد"},
@@ -61,6 +71,12 @@ For example:
 
         }.ToImmutableDictionary();
 
+        /// <summary>
+        /// Converts the <see cref="UserTypeTest" /> enumeration value to its string representation.
+        /// </summary>
+        /// <param name="states">The <see cref="UserTypeTest" /> enumeration value.</param>
+        /// <param name="defaultValue">The default value to return if the enumeration value is not recognized.</param>
+        /// <returns>The string representation of the <see cref="UserTypeTest" /> value.</returns>
         public static string ToStringFast(this UnitTests.UserTypeTest states, string defaultValue = null)
         {
             return states switch
@@ -71,6 +87,12 @@ For example:
                 _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }
+
+        /// <summary>
+        /// Checks if the specified <see cref="UserTypeTest" /> value is defined.
+        /// </summary>
+        /// <param name="states">The <see cref="UserTypeTest" /> value to check.</param>
+        /// <returns>True if the <see cref="UserTypeTest" /> value is defined; otherwise, false.</returns>
         public static bool IsDefinedFast(UnitTests.UserTypeTest states)
         {
             return states switch
@@ -81,6 +103,12 @@ For example:
                 _ => false
             };
         }
+
+        /// <summary>
+        /// Checks if the specified string represents a defined <see cref="UserTypeTest" /> value.
+        /// </summary>
+        /// <param name="states">The string representing a <see cref="UserTypeTest" /> value.</param>
+        /// <returns>True if the string represents a defined <see cref="UserTypeTest" /> value; otherwise, false.</returns>
         public static bool IsDefinedFast(string states)
         {
             return states switch
@@ -91,6 +119,13 @@ For example:
                 _ => false
             };
         }
+
+        /// <summary>
+        /// Converts the <see cref="UserTypeTest" /> enumeration value to its display string.
+        /// </summary>
+        /// <param name="states">The <see cref="UserTypeTest" /> enumeration value.</param>
+        /// <param name="defaultValue">The default value to return if the enumeration value is not recognized.</param>
+        /// <returns>The display string of the <see cref="UserTypeTest" /> value.</returns>
         public static string ToDisplayFast(this UnitTests.UserTypeTest states, string defaultValue = null)
         {
             return states switch
@@ -101,6 +136,13 @@ For example:
                 _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }
+
+        /// <summary>
+        /// Gets the description of the <see cref="UserTypeTest" /> enumeration value.
+        /// </summary>
+        /// <param name="states">The <see cref="UserTypeTest" /> enumeration value.</param>
+        /// <param name="defaultValue">The default value to return if the enumeration value is not recognized.</param>
+        /// <returns>The description of the <see cref="UserTypeTest" /> value.</returns>
         public static string ToDescriptionFast(this UnitTests.UserTypeTest states, string defaultValue = null)
         {
             return states switch
@@ -111,6 +153,11 @@ For example:
                 _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
         }
+
+        /// <summary>
+        /// Retrieves an array of all <see cref="UserTypeTest" /> enumeration values.
+        /// </summary>
+        /// <returns>An array containing all <see cref="UserTypeTest" /> enumeration values.</returns>
         public static UnitTests.UserTypeTest[] GetValuesFast()
         {
             return new[]
@@ -120,6 +167,11 @@ For example:
                 UnitTests.UserTypeTest.None,
             };
         }
+
+        /// <summary>
+        /// Retrieves an array of strings containing the names of all <see cref="UserTypeTest" /> enumeration values.
+        /// </summary>
+        /// <returns>An array of strings containing the names of all <see cref="UserTypeTest" /> enumeration values.</returns>
         public static string[] GetNamesFast()
         {
             return new[]
@@ -129,6 +181,11 @@ For example:
                 nameof(UnitTests.UserTypeTest.None),
             };
         }
+
+        /// <summary>
+        /// Gets the length of the <see cref="UserTypeTest" /> enumeration.
+        /// </summary>
+        /// <returns>The length of the <see cref="UserTypeTest" /> enumeration.</returns>
         public static int GetLengthFast()
         {
             return 3;

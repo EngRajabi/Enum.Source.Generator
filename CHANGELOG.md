@@ -1,3 +1,6 @@
+## v1.0.16
+fix doc warning
+add GeneratedCodeAttribute attrbiute
 ## v1.0.15
 Downgrading packages for older programs
 ## v1.0.14

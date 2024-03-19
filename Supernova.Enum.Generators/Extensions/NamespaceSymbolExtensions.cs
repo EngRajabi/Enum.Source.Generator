@@ -14,7 +14,7 @@ public static class NamespaceSymbolExtensions
     /// <param name="namespaceSymbol">The namespace symbol.</param>
     /// <param name="fullName">Optional. The initial full name to start with.</param>
     /// <returns>The full name of the namespace.</returns>
-    public static string FullName(this INamespaceSymbol namespaceSymbol, string fullName = null)
+    public static string FullNamespace(this INamespaceSymbol namespaceSymbol, string fullName = null)
     {
         fullName ??= string.Empty;
 
@@ -25,7 +25,7 @@ public static class NamespaceSymbolExtensions
         
         if (namespaceSymbol.ContainingNamespace != null)
         {
-            fullName = namespaceSymbol.ContainingNamespace.FullName(fullName);
+            fullName = namespaceSymbol.ContainingNamespace.FullNamespace(fullName);
         }
 
         if (!fullName.Equals(string.Empty, StringComparison.OrdinalIgnoreCase))
