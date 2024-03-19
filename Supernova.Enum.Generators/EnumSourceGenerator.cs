@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Supernova.Enum.Generators.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Supernova.Enum.Generators;
 
@@ -24,13 +24,16 @@ public class EnumSourceGenerator : ISourceGenerator
         //            Debugger.Launch();
         //        }
         //#endif
-        context.AddSource($"{SourceGeneratorHelper.AttributeName}Attribute.g.cs", SourceText.From($@"using System;
+        context.AddSource($"{SourceGeneratorHelper.AttributeName}Attribute.g.cs", SourceText.From($@"
+using System;
+using System.CodeDom.Compiler;
 namespace {SourceGeneratorHelper.NameSpace}
 {{
     /// <summary>
     /// An attribute that marks enums for which extension methods are to be generated.
     /// </summary>
     [AttributeUsage(AttributeTargets.Enum)]
+    [GeneratedCodeAttribute(""Supernova.Enum.Generators"", null)]
     public sealed class {SourceGeneratorHelper.AttributeName}Attribute : Attribute
     {{
     }}
@@ -93,13 +96,13 @@ namespace {SourceGeneratorHelper.NameSpace}
                          namedArgument.Value.Value?.ToString() is { } displayName)
                         {
                             enumDisplayNames.Add(member.Name, displayName);
-                        } 
+                        }
                         if (namedArgument.Key.Equals("Description", StringComparison.OrdinalIgnoreCase) &&
                          namedArgument.Value.Value?.ToString() is { } description)
                         {
                             enumDescriptions.Add(member.Name, description);
                         }
-                        
+
                     }
                 }
             }
@@ -117,10 +120,10 @@ namespace {SourceGeneratorHelper.NameSpace}
 
             //DisplayNames Dictionary
             DisplayNamesDictionary(sourceBuilder, symbol, e, enumDisplayNames);
-            
+
             //DisplayDescriptions Dictionary
             DisplayDescriptionsDictionary(sourceBuilder, symbol, e, enumDescriptions);
-            
+
             //ToStringFast
             ToStringFast(sourceBuilder, symbol, e);
 
