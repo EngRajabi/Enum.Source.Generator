@@ -8,13 +8,13 @@ using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Running;
-using EnumFastToStringGenerated;
 using Perfolizer.Horology;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Supernova.Enum.Generators;
 
 namespace Console.Test.Benchmark;
 

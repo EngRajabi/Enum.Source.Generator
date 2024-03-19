@@ -1,11 +1,11 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
-using Supernova.Enum.Generators.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
+using Supernova.Enum.Generators.Extensions;
 
 namespace Supernova.Enum.Generators;
 
@@ -27,7 +27,7 @@ public class EnumSourceGenerator : ISourceGenerator
         context.AddSource($"{SourceGeneratorHelper.AttributeName}Attribute.g.cs", SourceText.From($@"
 using System;
 using System.CodeDom.Compiler;
-namespace {SourceGeneratorHelper.NameSpace}
+namespace Supernova.Enum.Generators
 {{
     /// <summary>
     /// An attribute that marks enums for which extension methods are to be generated.
@@ -110,7 +110,8 @@ namespace {SourceGeneratorHelper.NameSpace}
             var sourceBuilder = new StringBuilder($@"using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-namespace {SourceGeneratorHelper.NameSpace}
+
+namespace {symbol.ContainingNamespace.FullNamespace()}
 {{
     /// <summary>
     /// Provides extension methods for operations related to the {symbol.Name} enumeration.

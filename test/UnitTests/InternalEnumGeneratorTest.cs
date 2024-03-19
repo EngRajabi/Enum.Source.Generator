@@ -1,9 +1,9 @@
-﻿using EnumFastToStringGenerated;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Supernova.Enum.Generators;
 
 namespace UnitTests;
 
