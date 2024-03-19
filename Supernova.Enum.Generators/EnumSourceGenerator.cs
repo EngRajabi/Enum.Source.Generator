@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
+using Supernova.Enum.Generators.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 
 namespace Supernova.Enum.Generators;
 
@@ -50,7 +51,6 @@ public class EnumSourceGenerator : ISourceGenerator
                 continue;
 
             var symbol = semanticModel.GetDeclaredSymbol(e);
-            var symbolName = $"{symbol.ContainingNamespace}.{symbol.Name}";
 
             //var attribute = symbol.GetAttributes()
             //    .FirstOrDefault(x => string.Equals(x.AttributeClass.Name, SourceGeneratorHelper.AttributeName,
@@ -85,13 +85,13 @@ public class EnumSourceGenerator : ISourceGenerator
                          namedArgument.Value.Value?.ToString() is { } displayName)
                         {
                             enumDisplayNames.Add(member.Name, displayName);
-                        } 
+                        }
                         if (namedArgument.Key.Equals("Description", StringComparison.OrdinalIgnoreCase) &&
                          namedArgument.Value.Value?.ToString() is { } description)
                         {
                             enumDescriptions.Add(member.Name, description);
                         }
-                        
+
                     }
                 }
             }
@@ -102,41 +102,45 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+
 namespace {SourceGeneratorHelper.NameSpace}
 {{
-    [GeneratedCodeAttribute(""Supernova.Enum.Generators"", null)]
+    /// <summary>
+    /// Provides extension methods for operations related to the {symbol.Name} enumeration.
+    /// </summary>
+    [GeneratedCodeAttribute(""Supernova.Enum.Generators"", null)]    
     {symbol.DeclaredAccessibility.ToString("G").ToLower()} static class {symbol.Name}EnumExtensions
     {{");
 
             //DisplayNames Dictionary
-            DisplayNamesDictionary(sourceBuilder, symbolName, e, enumDisplayNames);
-            
+            DisplayNamesDictionary(sourceBuilder, symbol, e, enumDisplayNames);
+
             //DisplayDescriptions Dictionary
-            DisplayDescriptionsDictionary(sourceBuilder, symbolName, e, enumDescriptions);
-            
+            DisplayDescriptionsDictionary(sourceBuilder, symbol, e, enumDescriptions);
+
             //ToStringFast
-            ToStringFast(sourceBuilder, symbolName, e);
+            ToStringFast(sourceBuilder, symbol, e);
 
             //IsDefined enum
-            IsDefinedEnum(sourceBuilder, symbolName, e);
+            IsDefinedEnum(sourceBuilder, symbol, e);
 
             //IsDefined string
-            IsDefinedString(sourceBuilder, e, symbolName);
+            IsDefinedString(sourceBuilder, e, symbol);
 
             //ToDisplay string
-            ToDisplay(sourceBuilder, symbolName, e, enumDisplayNames);
+            ToDisplay(sourceBuilder, symbol, e, enumDisplayNames);
 
             //ToDisplay string
-            ToDescription(sourceBuilder, symbolName, e, enumDescriptions);
+            ToDescription(sourceBuilder, symbol, e, enumDescriptions);
 
             //GetValues
-            GetValuesFast(sourceBuilder, symbolName, e);
+            GetValuesFast(sourceBuilder, symbol, e);
 
             //GetNames
-            GetNamesFast(sourceBuilder, symbolName, e);
+            GetNamesFast(sourceBuilder, symbol, e);
 
             //GetLength
-            GetLengthFast(sourceBuilder, symbolName, e);
+            GetLengthFast(sourceBuilder, symbol, e);
 
             sourceBuilder.Append(@"
     }
@@ -148,11 +152,17 @@ namespace {SourceGeneratorHelper.NameSpace}
         }
     }
 
-    private static void ToDisplay(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
+    private static void ToDisplay(StringBuilder sourceBuilder, ISymbol symbol, EnumDeclarationSyntax e,
         Dictionary<string, string> enumDisplayNames)
     {
         sourceBuilder.Append($@"
-        public static string {SourceGeneratorHelper.ExtensionMethodNameToDisplay}(this {symbolName} states, string defaultValue = null)
+        /// <summary>
+        /// Converts the <see cref=""{symbol.Name}"" /> enumeration value to its display string.
+        /// </summary>
+        /// <param name=""states"">The <see cref=""{symbol.Name}"" /> enumeration value.</param>
+        /// <param name=""defaultValue"">The default value to return if the enumeration value is not recognized.</param>
+        /// <returns>The display string of the <see cref=""{symbol.Name}"" /> value.</returns>
+        public static string {SourceGeneratorHelper.ExtensionMethodNameToDisplay}(this {symbol.FullName()} states, string defaultValue = null)
         {{
             return states switch
             {{
@@ -164,20 +174,27 @@ namespace {SourceGeneratorHelper.NameSpace}
                 ? found
                 : key;
             sourceBuilder.AppendLine(
-                $@"                {symbolName}.{member.Identifier.ValueText} => ""{enumDisplayName ?? key}"",");
+                $@"                {symbol}.{member.Identifier.ValueText} => ""{enumDisplayName ?? key}"",");
         }
 
         sourceBuilder.Append(
             @"                _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
-        }");
+        }
+");
     }
 
-    private static void ToDescription(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
+    private static void ToDescription(StringBuilder sourceBuilder, ISymbol symbol, EnumDeclarationSyntax e,
         Dictionary<string, string> enumDescriptions)
     {
         sourceBuilder.Append($@"
-        public static string {SourceGeneratorHelper.ExtensionMethodNameToDescription}(this {symbolName} states, string defaultValue = null)
+        /// <summary>
+        /// Gets the description of the <see cref=""{symbol.Name}"" /> enumeration value.
+        /// </summary>
+        /// <param name=""states"">The <see cref=""{symbol.Name}"" /> enumeration value.</param>
+        /// <param name=""defaultValue"">The default value to return if the enumeration value is not recognized.</param>
+        /// <returns>The description of the <see cref=""{symbol.Name}"" /> value.</returns>
+        public static string {SourceGeneratorHelper.ExtensionMethodNameToDescription}(this {symbol.FullName()} states, string defaultValue = null)
         {{
             return states switch
             {{
@@ -189,68 +206,91 @@ namespace {SourceGeneratorHelper.NameSpace}
                 ? found
                 : key;
             sourceBuilder.AppendLine(
-                $@"                {symbolName}.{member.Identifier.ValueText} => ""{enumDescription ?? key}"",");
+                $@"                {symbol}.{member.Identifier.ValueText} => ""{enumDescription ?? key}"",");
         }
 
         sourceBuilder.Append(
             @"                _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
-        }");
+        }
+");
     }
 
-    private static void IsDefinedString(StringBuilder sourceBuilder, EnumDeclarationSyntax e, string symbolName)
+    private static void IsDefinedString(StringBuilder sourceBuilder, EnumDeclarationSyntax e, ISymbol symbol)
     {
         sourceBuilder.Append($@"
+        /// <summary>
+        /// Checks if the specified string represents a defined <see cref=""{symbol.Name}"" /> value.
+        /// </summary>
+        /// <param name=""states"">The string representing a <see cref=""{symbol.Name}"" /> value.</param>
+        /// <returns>True if the string represents a defined <see cref=""{symbol.Name}"" /> value; otherwise, false.</returns>
         public static bool {SourceGeneratorHelper.ExtensionMethodNameIsDefined}(string states)
         {{
             return states switch
             {{
 ");
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-            sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}) => true,");
+            sourceBuilder.AppendLine($@"                nameof({symbol.FullName()}.{member}) => true,");
         sourceBuilder.Append(
             @"                _ => false
             };
-        }");
+        }
+");
     }
 
-    private static void IsDefinedEnum(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    private static void IsDefinedEnum(StringBuilder sourceBuilder, ISymbol symbol, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
-        public static bool {SourceGeneratorHelper.ExtensionMethodNameIsDefined}({symbolName} states)
+        /// <summary>
+        /// Checks if the specified <see cref=""{symbol.Name}"" /> value is defined.
+        /// </summary>
+        /// <param name=""states"">The <see cref=""{symbol.Name}"" /> value to check.</param>
+        /// <returns>True if the <see cref=""{symbol.Name}"" /> value is defined; otherwise, false.</returns>
+        public static bool {SourceGeneratorHelper.ExtensionMethodNameIsDefined}({symbol.FullName()} states)
         {{
             return states switch
             {{
 ");
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-            sourceBuilder.AppendLine($@"                {symbolName}.{member} => true,");
+            sourceBuilder.AppendLine($@"                {symbol.FullName()}.{member} => true,");
         sourceBuilder.Append(
             @"                _ => false
             };
-        }");
+        }
+");
     }
 
-    private static void ToStringFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    private static void ToStringFast(StringBuilder sourceBuilder, ISymbol symbol, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
-        public static string {SourceGeneratorHelper.ExtensionMethodNameToString}(this {symbolName} states, string defaultValue = null)
+        /// <summary>
+        /// Converts the <see cref=""{symbol.Name}"" /> enumeration value to its string representation.
+        /// </summary>
+        /// <param name=""states"">The <see cref=""{symbol.Name}"" /> enumeration value.</param>
+        /// <param name=""defaultValue"">The default value to return if the enumeration value is not recognized.</param>
+        /// <returns>The string representation of the <see cref=""{symbol.Name}"" /> value.</returns>
+        public static string {SourceGeneratorHelper.ExtensionMethodNameToString}(this {symbol.FullName()} states, string defaultValue = null)
         {{
             return states switch
             {{
 ");
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-            sourceBuilder.AppendLine($@"                {symbolName}.{member} => nameof({symbolName}.{member}),");
+            sourceBuilder.AppendLine($@"                {symbol.FullName()}.{member} => nameof({symbol.FullName()}.{member}),");
         sourceBuilder.Append(
             @"                _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
             };
-        }");
+        }
+");
     }
 
-    private static void DisplayNamesDictionary(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
+    private static void DisplayNamesDictionary(StringBuilder sourceBuilder, ISymbol symbol, EnumDeclarationSyntax e,
         Dictionary<string, string> enumDisplayNames)
     {
         sourceBuilder.Append($@"
-        public static readonly ImmutableDictionary<{symbolName}, string> {SourceGeneratorHelper.PropertyDisplayNamesDictionary} = new Dictionary<{symbolName}, string>
+        /// <summary>
+        /// Provides a dictionary that maps <see cref=""{symbol.Name}"" /> values to their corresponding display names.
+        /// </summary>
+        public static readonly ImmutableDictionary<{symbol.FullName()}, string> {SourceGeneratorHelper.PropertyDisplayNamesDictionary} = new Dictionary<{symbol.FullName()}, string>
         {{
 ");
         foreach (var member in e.Members)
@@ -260,7 +300,7 @@ namespace {SourceGeneratorHelper.NameSpace}
                 ? found
                 : key;
             sourceBuilder.AppendLine(
-                $@"                {{{symbolName}.{member.Identifier.ValueText}, ""{enumDisplayName ?? key}""}},");
+                $@"                {{{symbol}.{member.Identifier.ValueText}, ""{enumDisplayName ?? key}""}},");
         }
         sourceBuilder.Append(
             @"
@@ -268,11 +308,14 @@ namespace {SourceGeneratorHelper.NameSpace}
 ");
     }
 
-    private static void DisplayDescriptionsDictionary(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e,
+    private static void DisplayDescriptionsDictionary(StringBuilder sourceBuilder, ISymbol symbol, EnumDeclarationSyntax e,
         Dictionary<string, string> enumDescriptionNames)
     {
         sourceBuilder.Append($@"
-        public static readonly ImmutableDictionary<{symbolName}, string> {SourceGeneratorHelper.PropertyDisplayDescriptionsDictionary} = new Dictionary<{symbolName}, string>
+        /// <summary>
+        /// Provides a dictionary that maps <see cref=""{symbol.Name}"" /> values to their corresponding descriptions.
+        /// </summary>
+        public static readonly ImmutableDictionary<{symbol.FullName()}, string> {SourceGeneratorHelper.PropertyDisplayDescriptionsDictionary} = new Dictionary<{symbol.FullName()}, string>
         {{
 ");
         foreach (var member in e.Members)
@@ -282,7 +325,7 @@ namespace {SourceGeneratorHelper.NameSpace}
                 ? found
                 : key;
             sourceBuilder.AppendLine(
-                $@"                {{{symbolName}.{member.Identifier.ValueText}, ""{enumDescription ?? key}""}},");
+                $@"                {{{symbol.FullName()}.{member.Identifier.ValueText}, ""{enumDescription ?? key}""}},");
         }
         sourceBuilder.Append(
             @"
@@ -290,45 +333,60 @@ namespace {SourceGeneratorHelper.NameSpace}
 ");
     }
 
-    private static void GetValuesFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    private static void GetValuesFast(StringBuilder sourceBuilder, ISymbol symbol, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
-        public static {symbolName}[] {SourceGeneratorHelper.ExtensionMethodNameGetValues}()
+        /// <summary>
+        /// Retrieves an array of all <see cref=""{symbol.Name}"" /> enumeration values.
+        /// </summary>
+        /// <returns>An array containing all <see cref=""{symbol.Name}"" /> enumeration values.</returns>
+        public static {symbol.FullName()}[] {SourceGeneratorHelper.ExtensionMethodNameGetValues}()
         {{
             return new[]
             {{
 ");
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-            sourceBuilder.AppendLine($@"                {symbolName}.{member},");
+            sourceBuilder.AppendLine($@"                {symbol.FullName()}.{member},");
 
         sourceBuilder.Append(@"            };
-        }");
+        }
+");
     }
 
-    private static void GetNamesFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    private static void GetNamesFast(StringBuilder sourceBuilder, ISymbol symbol, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
+        /// <summary>
+        /// Retrieves an array of strings containing the names of all <see cref=""{symbol.Name}"" /> enumeration values.
+        /// </summary>
+        /// <returns>An array of strings containing the names of all <see cref=""{symbol.Name}"" /> enumeration values.</returns>
         public static string[] {SourceGeneratorHelper.ExtensionMethodNameGetNames}()
         {{
             return new[]
             {{
 ");
         foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
-            sourceBuilder.AppendLine($@"                nameof({symbolName}.{member}),");
+            sourceBuilder.AppendLine($@"                nameof({symbol.FullName()}.{member}),");
 
         sourceBuilder.Append(@"            };
-        }");
+        }
+");
     }
 
-    private static void GetLengthFast(StringBuilder sourceBuilder, string symbolName, EnumDeclarationSyntax e)
+    private static void GetLengthFast(StringBuilder sourceBuilder, ISymbol symbol, EnumDeclarationSyntax e)
     {
         sourceBuilder.Append($@"
+        /// <summary>
+        /// Gets the length of the <see cref=""{symbol.Name}"" /> enumeration.
+        /// </summary>
+        /// <returns>The length of the <see cref=""{symbol.Name}"" /> enumeration.</returns>
         public static int {SourceGeneratorHelper.ExtensionMethodNameGetLength}()
         {{
             return {e.Members.Count};
 ");
 
         sourceBuilder.Append(@"
-        }");
+        }
+");
     }
 }
