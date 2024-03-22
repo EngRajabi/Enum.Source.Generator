@@ -404,10 +404,11 @@ namespace {SourceGeneratorHelper.NameSpace}
     {
         sourceBuilder.Append($@"
         /// <summary>
-        /// Checks if the specified string represents a defined <see cref=""global::{symbol.FullName()}"" /> value.
+        /// Try parse a string to <see cref=""global::{symbol.FullName()}"" /> value.
         /// </summary>
         /// <param name=""states"">The string representing a <see cref=""global::{symbol.FullName()}"" /> value.</param>
-        /// <returns>True if the string represents a defined <see cref=""global::{symbol.FullName()}"" /> value; otherwise, false.</returns>
+        /// <param name=""result"">The enum <see cref=""global::{symbol.FullName()}"" /> parse result.</param>
+        /// <returns>True if the string is parsed successfully; otherwise, false.</returns>
         public static bool {SourceGeneratorHelper.ExtensionMethodNameTryParse}(string states, out {symbol.FullName()} result)
         {{
             switch (states)
