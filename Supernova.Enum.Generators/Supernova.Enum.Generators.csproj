@@ -17,6 +17,7 @@
                 fix doc warning
                 add GeneratedCodeAttribute attrbiute
         </PackageReleaseNotes>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
