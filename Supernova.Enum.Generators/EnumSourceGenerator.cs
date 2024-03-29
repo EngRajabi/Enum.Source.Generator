@@ -113,7 +113,7 @@ using System.Collections.Immutable;
 namespace {SourceGeneratorHelper.NameSpace}
 {{
     /// <summary>
-    /// Provides extension methods for operations related to the {symbol.Name} enumeration.
+    /// Provides extension methods for operations related to the <see cref=""global::{symbol.FullName()}"" /> enumeration.
     /// </summary>
     {symbol.DeclaredAccessibility.ToString("G").ToLower()} static class {symbol.Name}EnumExtensions
     {{");
@@ -147,6 +147,10 @@ namespace {SourceGeneratorHelper.NameSpace}
 
             //GetLength
             GetLengthFast(sourceBuilder, symbol, e);
+            
+            
+            //TryParse
+            TryParseFast(sourceBuilder, e, symbol);
 
             sourceBuilder.Append(@"
     }
@@ -163,11 +167,11 @@ namespace {SourceGeneratorHelper.NameSpace}
     {
         sourceBuilder.Append($@"
         /// <summary>
-        /// Converts the <see cref=""{symbol.Name}"" /> enumeration value to its display string.
+        /// Converts the <see cref=""global::{symbol.FullName()}"" /> enumeration value to its display string.
         /// </summary>
-        /// <param name=""states"">The <see cref=""{symbol.Name}"" /> enumeration value.</param>
+        /// <param name=""states"">The <see cref=""global::{symbol.FullName()}"" /> enumeration value.</param>
         /// <param name=""defaultValue"">The default value to return if the enumeration value is not recognized.</param>
-        /// <returns>The display string of the <see cref=""{symbol.Name}"" /> value.</returns>
+        /// <returns>The display string of the <see cref=""global::{symbol.FullName()}"" /> value.</returns>
         public static string {SourceGeneratorHelper.ExtensionMethodNameToDisplay}(this {symbol.FullName()} states, string defaultValue = null)
         {{
             return states switch
@@ -195,11 +199,11 @@ namespace {SourceGeneratorHelper.NameSpace}
     {
         sourceBuilder.Append($@"
         /// <summary>
-        /// Gets the description of the <see cref=""{symbol.Name}"" /> enumeration value.
+        /// Gets the description of the <see cref=""global::{symbol.FullName()}"" /> enumeration value.
         /// </summary>
-        /// <param name=""states"">The <see cref=""{symbol.Name}"" /> enumeration value.</param>
+        /// <param name=""states"">The <see cref=""global::{symbol.FullName()}"" /> enumeration value.</param>
         /// <param name=""defaultValue"">The default value to return if the enumeration value is not recognized.</param>
-        /// <returns>The description of the <see cref=""{symbol.Name}"" /> value.</returns>
+        /// <returns>The description of the <see cref=""global::{symbol.FullName()}"" /> value.</returns>
         public static string {SourceGeneratorHelper.ExtensionMethodNameToDescription}(this {symbol.FullName()} states, string defaultValue = null)
         {{
             return states switch
@@ -226,10 +230,10 @@ namespace {SourceGeneratorHelper.NameSpace}
     {
         sourceBuilder.Append($@"
         /// <summary>
-        /// Checks if the specified string represents a defined <see cref=""{symbol.Name}"" /> value.
+        /// Checks if the specified string represents a defined <see cref=""global::{symbol.FullName()}"" /> value.
         /// </summary>
-        /// <param name=""states"">The string representing a <see cref=""{symbol.Name}"" /> value.</param>
-        /// <returns>True if the string represents a defined <see cref=""{symbol.Name}"" /> value; otherwise, false.</returns>
+        /// <param name=""states"">The string representing a <see cref=""global::{symbol.FullName()}"" /> value.</param>
+        /// <returns>True if the string represents a defined <see cref=""global::{symbol.FullName()}"" /> value; otherwise, false.</returns>
         public static bool {SourceGeneratorHelper.ExtensionMethodNameIsDefined}(string states)
         {{
             return states switch
@@ -248,10 +252,10 @@ namespace {SourceGeneratorHelper.NameSpace}
     {
         sourceBuilder.Append($@"
         /// <summary>
-        /// Checks if the specified <see cref=""{symbol.Name}"" /> value is defined.
+        /// Checks if the specified <see cref=""global::{symbol.FullName()}"" /> value is defined.
         /// </summary>
-        /// <param name=""states"">The <see cref=""{symbol.Name}"" /> value to check.</param>
-        /// <returns>True if the <see cref=""{symbol.Name}"" /> value is defined; otherwise, false.</returns>
+        /// <param name=""states"">The <see cref=""global::{symbol.FullName()}"" /> value to check.</param>
+        /// <returns>True if the <see cref=""global::{symbol.FullName()}"" /> value is defined; otherwise, false.</returns>
         public static bool {SourceGeneratorHelper.ExtensionMethodNameIsDefined}({symbol.FullName()} states)
         {{
             return states switch
@@ -270,11 +274,11 @@ namespace {SourceGeneratorHelper.NameSpace}
     {
         sourceBuilder.Append($@"
         /// <summary>
-        /// Converts the <see cref=""{symbol.Name}"" /> enumeration value to its string representation.
+        /// Converts the <see cref=""global::{symbol.FullName()}"" /> enumeration value to its string representation.
         /// </summary>
-        /// <param name=""states"">The <see cref=""{symbol.Name}"" /> enumeration value.</param>
+        /// <param name=""states"">The <see cref=""global::{symbol.FullName()}"" /> enumeration value.</param>
         /// <param name=""defaultValue"">The default value to return if the enumeration value is not recognized.</param>
-        /// <returns>The string representation of the <see cref=""{symbol.Name}"" /> value.</returns>
+        /// <returns>The string representation of the <see cref=""global::{symbol.FullName()}"" /> value.</returns>
         public static string {SourceGeneratorHelper.ExtensionMethodNameToString}(this {symbol.FullName()} states, string defaultValue = null)
         {{
             return states switch
@@ -294,7 +298,7 @@ namespace {SourceGeneratorHelper.NameSpace}
     {
         sourceBuilder.Append($@"
         /// <summary>
-        /// Provides a dictionary that maps <see cref=""{symbol.Name}"" /> values to their corresponding display names.
+        /// Provides a dictionary that maps <see cref=""global::{symbol.FullName()}"" /> values to their corresponding display names.
         /// </summary>
         public static readonly ImmutableDictionary<{symbol.FullName()}, string> {SourceGeneratorHelper.PropertyDisplayNamesDictionary} = new Dictionary<{symbol.FullName()}, string>
         {{
@@ -319,7 +323,7 @@ namespace {SourceGeneratorHelper.NameSpace}
     {
         sourceBuilder.Append($@"
         /// <summary>
-        /// Provides a dictionary that maps <see cref=""{symbol.Name}"" /> values to their corresponding descriptions.
+        /// Provides a dictionary that maps <see cref=""global::{symbol.FullName()}"" /> values to their corresponding descriptions.
         /// </summary>
         public static readonly ImmutableDictionary<{symbol.FullName()}, string> {SourceGeneratorHelper.PropertyDisplayDescriptionsDictionary} = new Dictionary<{symbol.FullName()}, string>
         {{
@@ -343,9 +347,9 @@ namespace {SourceGeneratorHelper.NameSpace}
     {
         sourceBuilder.Append($@"
         /// <summary>
-        /// Retrieves an array of all <see cref=""{symbol.Name}"" /> enumeration values.
+        /// Retrieves an array of all <see cref=""global::{symbol.FullName()}"" /> enumeration values.
         /// </summary>
-        /// <returns>An array containing all <see cref=""{symbol.Name}"" /> enumeration values.</returns>
+        /// <returns>An array containing all <see cref=""global::{symbol.FullName()}"" /> enumeration values.</returns>
         public static {symbol.FullName()}[] {SourceGeneratorHelper.ExtensionMethodNameGetValues}()
         {{
             return new[]
@@ -363,9 +367,9 @@ namespace {SourceGeneratorHelper.NameSpace}
     {
         sourceBuilder.Append($@"
         /// <summary>
-        /// Retrieves an array of strings containing the names of all <see cref=""{symbol.Name}"" /> enumeration values.
+        /// Retrieves an array of strings containing the names of all <see cref=""global::{symbol.FullName()}"" /> enumeration values.
         /// </summary>
-        /// <returns>An array of strings containing the names of all <see cref=""{symbol.Name}"" /> enumeration values.</returns>
+        /// <returns>An array of strings containing the names of all <see cref=""global::{symbol.FullName()}"" /> enumeration values.</returns>
         public static string[] {SourceGeneratorHelper.ExtensionMethodNameGetNames}()
         {{
             return new[]
@@ -383,9 +387,9 @@ namespace {SourceGeneratorHelper.NameSpace}
     {
         sourceBuilder.Append($@"
         /// <summary>
-        /// Gets the length of the <see cref=""{symbol.Name}"" /> enumeration.
+        /// Gets the length of the <see cref=""global::{symbol.FullName()}"" /> enumeration.
         /// </summary>
-        /// <returns>The length of the <see cref=""{symbol.Name}"" /> enumeration.</returns>
+        /// <returns>The length of the <see cref=""global::{symbol.FullName()}"" /> enumeration.</returns>
         public static int {SourceGeneratorHelper.ExtensionMethodNameGetLength}()
         {{
             return {e.Members.Count};
@@ -394,5 +398,40 @@ namespace {SourceGeneratorHelper.NameSpace}
         sourceBuilder.Append(@"
         }
 ");
+    }
+    
+    private static void TryParseFast(StringBuilder sourceBuilder, EnumDeclarationSyntax e, ISymbol symbol)
+    {
+        sourceBuilder.Append($@"
+        /// <summary>
+        /// Try parse a string to <see cref=""global::{symbol.FullName()}"" /> value.
+        /// </summary>
+        /// <param name=""states"">The string representing a <see cref=""global::{symbol.FullName()}"" /> value.</param>
+        /// <param name=""result"">The enum <see cref=""global::{symbol.FullName()}"" /> parse result.</param>
+        /// <returns>True if the string is parsed successfully; otherwise, false.</returns>
+        public static bool {SourceGeneratorHelper.ExtensionMethodNameTryParse}(string states, out {symbol.FullName()} result)
+        {{
+            switch (states)
+            {{
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine(
+            $$"""
+                            case "{{member}}": 
+                            {
+                                result = {{symbol.FullName()}}.{{member}};
+                                return true;
+                            }
+            """);
+        sourceBuilder.Append(
+            """
+                            default: {
+                                result = default;
+                                return false;
+                            }
+                        }
+                    }
+            """
+            );
     }
 }
