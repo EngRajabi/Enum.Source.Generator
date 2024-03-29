@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+using System;
+using Microsoft.CodeAnalysis;
 
 namespace Supernova.Enum.Generators.Extensions;
 

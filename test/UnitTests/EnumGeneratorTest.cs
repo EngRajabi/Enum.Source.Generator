@@ -177,5 +177,16 @@ public class EnumGeneratorTest
         Assert.AreEqual(Enum.GetValues<UserTypeTest>().Length, length);
     }
 
+    [TestMethod]
+    public void TestEnumTryParse()
+    {
+        var menString = "Men";
+        bool result = UserTypeTestEnumExtensions.TryParseFast(menString, out var enumValue);
+
+        Assert.IsTrue(result);
+        Assert.AreEqual(enumValue,UserTypeTest.Men);
+    }
+
+
     private UserTypeTest GetUndefinedEnumValue() => (UserTypeTest)(-1);
 }

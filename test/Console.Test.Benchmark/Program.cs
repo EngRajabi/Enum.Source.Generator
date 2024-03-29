@@ -144,6 +144,16 @@ public class EnumBenchmark
     {
         return UserTypeEnumExtensions.GetLengthFast();
     }
+    [Benchmark]
+    public bool NativeTryParse()
+    {
+        return Enum.TryParse<UserType>("Men", out _);
+    }
+    [Benchmark]
+    public bool FastTryParse()
+    {
+        return UserTypeEnumExtensions.TryParseFast("Men",out _);
+    }
 }
 
 public static class Ext

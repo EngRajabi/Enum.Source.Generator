@@ -45,12 +45,13 @@ For example:
 ```csharp
 
     /// <summary>
-    /// Provides extension methods for operations related to the UserTypeTest enumeration.
-    /// </summary>
+    /// Provides extension methods for operations related to the <see cref="global::UnitTests.UserTypeTest" /> enumeration.
+    /// </summary>    
+    [GeneratedCodeAttribute("Supernova.Enum.Generators", null)]
     public static class UserTypeTestEnumExtensions
     {
         /// <summary>
-        /// Provides a dictionary that maps <see cref="UserTypeTest" /> values to their corresponding display names.
+        /// Provides a dictionary that maps <see cref="global::UnitTests.UserTypeTest" /> values to their corresponding display names.
         /// </summary>
         public static readonly ImmutableDictionary<UnitTests.UserTypeTest, string> DisplayNamesDictionary = new Dictionary<UnitTests.UserTypeTest, string>
         {
@@ -61,7 +62,7 @@ For example:
         }.ToImmutableDictionary();
 
         /// <summary>
-        /// Provides a dictionary that maps <see cref="UserTypeTest" /> values to their corresponding descriptions.
+        /// Provides a dictionary that maps <see cref="global::UnitTests.UserTypeTest" /> values to their corresponding descriptions.
         /// </summary>
         public static readonly ImmutableDictionary<UnitTests.UserTypeTest, string> DisplayDescriptionsDictionary = new Dictionary<UnitTests.UserTypeTest, string>
         {
@@ -72,11 +73,11 @@ For example:
         }.ToImmutableDictionary();
 
         /// <summary>
-        /// Converts the <see cref="UserTypeTest" /> enumeration value to its string representation.
+        /// Converts the <see cref="global::UnitTests.UserTypeTest" /> enumeration value to its string representation.
         /// </summary>
-        /// <param name="states">The <see cref="UserTypeTest" /> enumeration value.</param>
+        /// <param name="states">The <see cref="global::UnitTests.UserTypeTest" /> enumeration value.</param>
         /// <param name="defaultValue">The default value to return if the enumeration value is not recognized.</param>
-        /// <returns>The string representation of the <see cref="UserTypeTest" /> value.</returns>
+        /// <returns>The string representation of the <see cref="global::UnitTests.UserTypeTest" /> value.</returns>
         public static string ToStringFast(this UnitTests.UserTypeTest states, string defaultValue = null)
         {
             return states switch
@@ -89,10 +90,10 @@ For example:
         }
 
         /// <summary>
-        /// Checks if the specified <see cref="UserTypeTest" /> value is defined.
+        /// Checks if the specified <see cref="global::UnitTests.UserTypeTest" /> value is defined.
         /// </summary>
-        /// <param name="states">The <see cref="UserTypeTest" /> value to check.</param>
-        /// <returns>True if the <see cref="UserTypeTest" /> value is defined; otherwise, false.</returns>
+        /// <param name="states">The <see cref="global::UnitTests.UserTypeTest" /> value to check.</param>
+        /// <returns>True if the <see cref="global::UnitTests.UserTypeTest" /> value is defined; otherwise, false.</returns>
         public static bool IsDefinedFast(UnitTests.UserTypeTest states)
         {
             return states switch
@@ -105,10 +106,10 @@ For example:
         }
 
         /// <summary>
-        /// Checks if the specified string represents a defined <see cref="UserTypeTest" /> value.
+        /// Checks if the specified string represents a defined <see cref="global::UnitTests.UserTypeTest" /> value.
         /// </summary>
-        /// <param name="states">The string representing a <see cref="UserTypeTest" /> value.</param>
-        /// <returns>True if the string represents a defined <see cref="UserTypeTest" /> value; otherwise, false.</returns>
+        /// <param name="states">The string representing a <see cref="global::UnitTests.UserTypeTest" /> value.</param>
+        /// <returns>True if the string represents a defined <see cref="global::UnitTests.UserTypeTest" /> value; otherwise, false.</returns>
         public static bool IsDefinedFast(string states)
         {
             return states switch
@@ -121,11 +122,11 @@ For example:
         }
 
         /// <summary>
-        /// Converts the <see cref="UserTypeTest" /> enumeration value to its display string.
+        /// Converts the <see cref="global::UnitTests.UserTypeTest" /> enumeration value to its display string.
         /// </summary>
-        /// <param name="states">The <see cref="UserTypeTest" /> enumeration value.</param>
+        /// <param name="states">The <see cref="global::UnitTests.UserTypeTest" /> enumeration value.</param>
         /// <param name="defaultValue">The default value to return if the enumeration value is not recognized.</param>
-        /// <returns>The display string of the <see cref="UserTypeTest" /> value.</returns>
+        /// <returns>The display string of the <see cref="global::UnitTests.UserTypeTest" /> value.</returns>
         public static string ToDisplayFast(this UnitTests.UserTypeTest states, string defaultValue = null)
         {
             return states switch
@@ -138,11 +139,11 @@ For example:
         }
 
         /// <summary>
-        /// Gets the description of the <see cref="UserTypeTest" /> enumeration value.
+        /// Gets the description of the <see cref="global::UnitTests.UserTypeTest" /> enumeration value.
         /// </summary>
-        /// <param name="states">The <see cref="UserTypeTest" /> enumeration value.</param>
+        /// <param name="states">The <see cref="global::UnitTests.UserTypeTest" /> enumeration value.</param>
         /// <param name="defaultValue">The default value to return if the enumeration value is not recognized.</param>
-        /// <returns>The description of the <see cref="UserTypeTest" /> value.</returns>
+        /// <returns>The description of the <see cref="global::UnitTests.UserTypeTest" /> value.</returns>
         public static string ToDescriptionFast(this UnitTests.UserTypeTest states, string defaultValue = null)
         {
             return states switch
@@ -155,9 +156,9 @@ For example:
         }
 
         /// <summary>
-        /// Retrieves an array of all <see cref="UserTypeTest" /> enumeration values.
+        /// Retrieves an array of all <see cref="global::UnitTests.UserTypeTest" /> enumeration values.
         /// </summary>
-        /// <returns>An array containing all <see cref="UserTypeTest" /> enumeration values.</returns>
+        /// <returns>An array containing all <see cref="global::UnitTests.UserTypeTest" /> enumeration values.</returns>
         public static UnitTests.UserTypeTest[] GetValuesFast()
         {
             return new[]
@@ -169,9 +170,9 @@ For example:
         }
 
         /// <summary>
-        /// Retrieves an array of strings containing the names of all <see cref="UserTypeTest" /> enumeration values.
+        /// Retrieves an array of strings containing the names of all <see cref="global::UnitTests.UserTypeTest" /> enumeration values.
         /// </summary>
-        /// <returns>An array of strings containing the names of all <see cref="UserTypeTest" /> enumeration values.</returns>
+        /// <returns>An array of strings containing the names of all <see cref="global::UnitTests.UserTypeTest" /> enumeration values.</returns>
         public static string[] GetNamesFast()
         {
             return new[]
@@ -183,13 +184,45 @@ For example:
         }
 
         /// <summary>
-        /// Gets the length of the <see cref="UserTypeTest" /> enumeration.
+        /// Gets the length of the <see cref="global::UnitTests.UserTypeTest" /> enumeration.
         /// </summary>
-        /// <returns>The length of the <see cref="UserTypeTest" /> enumeration.</returns>
+        /// <returns>The length of the <see cref="global::UnitTests.UserTypeTest" /> enumeration.</returns>
         public static int GetLengthFast()
         {
             return 3;
 
+        }
+
+        /// <summary>
+        /// Try parse a string to <see cref="global::UnitTests.UserTypeTest" /> value.
+        /// </summary>
+        /// <param name="states">The string representing a <see cref="global::UnitTests.UserTypeTest" /> value.</param>
+        /// <param name="result">The enum <see cref="global::UnitTests.UserTypeTest" /> parse result.</param>
+        /// <returns>True if the string is parsed successfully; otherwise, false.</returns>
+        public static bool TryParseFast(string states, out UnitTests.UserTypeTest result)
+        {
+            switch (states)
+            {
+                case "Men": 
+                {
+                    result = UnitTests.UserTypeTest.Men;
+                    return true;
+                }
+                case "Women": 
+                {
+                    result = UnitTests.UserTypeTest.Women;
+                    return true;
+                }
+                case "None": 
+                {
+                    result = UnitTests.UserTypeTest.None;
+                    return true;
+                }
+                default: {
+                    result = default;
+                    return false;
+                }
+            }
         }
     }
 ```
@@ -211,6 +244,9 @@ var names = UserTypeTestEnumExtensions.GetNamesFast(); //string[]
 var values = UserTypeTestEnumExtensions.GetValuesFast(); //UserType[]
 
 var length = UserTypeTestEnumExtensions.GetLengthFast(); //3
+
+var menString = "Men";
+var result = UserTypeTestEnumExtensions.TryParseFast(menString, out var enumValue);
 ```
 
 If you had trouble using UserTypeTestEnumExtensions and the IDE did not recognize it. This is an IDE problem and you need to restart the IDE once.

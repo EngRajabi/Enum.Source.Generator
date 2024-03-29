@@ -11,6 +11,7 @@ public static class SourceGeneratorHelper
     public const string ExtensionMethodNameGetValues = "GetValuesFast";
     public const string ExtensionMethodNameGetNames = "GetNamesFast";
     public const string ExtensionMethodNameGetLength = "GetLengthFast";
+    public const string ExtensionMethodNameTryParse = "TryParseFast";
     public const string PropertyDisplayNamesDictionary = "DisplayNamesDictionary";
     public const string PropertyDisplayDescriptionsDictionary = "DisplayDescriptionsDictionary";
 

@@ -6,17 +6,18 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <GenerateDependencyFile>false</GenerateDependencyFile>
-        <Version>1.0.16</Version>
-        <PackageVersion>1.0.16</PackageVersion>
-        <AssemblyVersion>1.0.16</AssemblyVersion>
+        <Version>1.0.17</Version>
+        <PackageVersion>1.0.17</PackageVersion>
+        <AssemblyVersion>1.0.17</AssemblyVersion>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageIcon>icon.png</PackageIcon>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <PackageReleaseNotes>
-            v1.0.16
-                fix doc warning
-                add GeneratedCodeAttribute attrbiute
+            v1.0.17
+            fix doc
+            add TryParseFast
         </PackageReleaseNotes>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>

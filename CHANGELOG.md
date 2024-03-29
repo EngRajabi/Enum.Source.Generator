@@ -1,3 +1,6 @@
+## v1.0.17
+fix doc
+add TryParseFast
 ## v1.0.16
 fix doc warning
 add GeneratedCodeAttribute attrbiute
