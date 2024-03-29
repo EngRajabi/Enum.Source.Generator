@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
+using System;
 
 namespace Supernova.Enum.Generators.Extensions;
 
@@ -18,7 +18,7 @@ public static class SymbolExtensions
         // TODO: Use NamespaceSymbolExtensions.FullName after Merge of #70
         return $"{symbol.ContainingNamespace.FullNamespace()}.{symbol.Name}";
     }
-    
+
     /// <summary>
     /// Gets the full name of the namespace, including parent namespaces.
     /// </summary>
