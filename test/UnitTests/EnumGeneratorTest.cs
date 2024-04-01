@@ -186,6 +186,33 @@ public class EnumGeneratorTest
         Assert.IsTrue(result);
         Assert.AreEqual(enumValue,UserTypeTest.Men);
     }
+    [TestMethod]
+    public void TestEnumTryParse_ShouldFailed()
+    {
+        var menString = "mEn";
+        bool result = UserTypeTestEnumExtensions.TryParseFast(menString, out var enumValue);
+
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void TestEnumTryParseIgnoreCase()
+    {
+        var menString = "mEn";
+        bool result = UserTypeTestEnumExtensions.TryParseFast(menString,ignoreCase:true, out var enumValue);
+
+        Assert.IsTrue(result);
+        Assert.AreEqual(enumValue,UserTypeTest.Men);
+    }
+    [TestMethod]
+    public void TestEnumTryParseIgnoreCase_ShouldFailed()
+    {
+        var menString = "mEn";
+        bool result = UserTypeTestEnumExtensions.TryParseFast(menString,ignoreCase:false, out var enumValue);
+
+        Assert.IsFalse(result);
+    }
+
 
 
     private UserTypeTest GetUndefinedEnumValue() => (UserTypeTest)(-1);

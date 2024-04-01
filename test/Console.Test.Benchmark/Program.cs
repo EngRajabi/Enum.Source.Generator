@@ -154,6 +154,16 @@ public class EnumBenchmark
     {
         return UserTypeEnumExtensions.TryParseFast("Men",out _);
     }
+    [Benchmark]
+    public bool NativeTryParseIgnoreCase()
+    {
+        return Enum.TryParse<UserType>("mEn", ignoreCase:true, out _);
+    }
+    [Benchmark]
+    public bool FastTryParseIgnoreCase()
+    {
+        return UserTypeEnumExtensions.TryParseFast("mEn", ignoreCase:true, out _);
+    }
 }
 
 public static class Ext

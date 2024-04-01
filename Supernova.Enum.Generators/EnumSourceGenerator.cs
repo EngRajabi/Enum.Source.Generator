@@ -438,5 +438,34 @@ namespace {SourceGeneratorHelper.NameSpace}
                     }
             """
             );
+        
+        sourceBuilder.Append($@"
+        /// <summary>
+        /// Try parse a string to <see cref=""global::{symbol.FullName()}"" /> value.
+        /// </summary>
+        /// <param name=""states"">The string representing a <see cref=""global::{symbol.FullName()}"" /> value.</param>
+        /// <param name=""ignoreCase"">true to ignore case; false to consider case.</param>
+        /// <param name=""result"">The enum <see cref=""global::{symbol.FullName()}"" /> parse result.</param>
+        /// <returns>True if the string is parsed successfully; otherwise, false.</returns>
+        public static bool {SourceGeneratorHelper.ExtensionMethodNameTryParse}(string states, bool ignoreCase, out {symbol.FullName()} result)
+        {{
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine(
+                $$"""
+                              if (string.Equals(states, "{{member}}", ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                              {
+                                  result = {{symbol.FullName()}}.{{member}};
+                                  return true;
+                              }
+                  """);
+        sourceBuilder.Append(
+            """
+            
+                        result = default;
+                        return false;
+                    }
+            """
+        );
     }
 }
