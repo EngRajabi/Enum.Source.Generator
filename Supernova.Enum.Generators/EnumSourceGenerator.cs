@@ -438,5 +438,40 @@ namespace {SourceGeneratorHelper.NameSpace}
                     }
             """
             );
+
+
+
+        sourceBuilder.Append($@"
+        /// <summary>
+        /// Try parse a string to <see cref=""global::{symbol.FullName()}"" /> value.
+        /// </summary>
+        /// <param name=""states"">The string representing a <see cref=""global::{symbol.FullName()}"" /> value.</param>
+        /// <param name=""result"">The enum <see cref=""global::{symbol.FullName()}"" /> parse result.</param>
+        /// <param name=""comparisonType"">See StringComparison for meaning of different comparisonType</param>
+        /// <returns>True if the string is parsed successfully; otherwise, false.</returns>
+        public static bool {SourceGeneratorHelper.ExtensionMethodNameTryParse}(string states, out {symbol.FullName()} result,StringComparison comparisonType)
+        {{
+                    result =default;
+");
+        foreach (var member in e.Members.Select(x => x.Identifier.ValueText))
+            sourceBuilder.AppendLine(
+            $$"""
+                        
+                             if (string.Compare(states, "{{member}}", comparisonType ) == 0)
+                            {
+                                result = {{symbol.FullName()}}.{{member}};
+                                return true;
+                            }
+            """);
+        sourceBuilder.Append(
+            """
+                        
+                        
+                                return false;
+                            
+                        
+                    }
+            """
+            );
     }
 }

@@ -188,5 +188,57 @@ public class EnumGeneratorTest
     }
 
 
+
+    [DataTestMethod]
+    [DataRow("Men", StringComparison.OrdinalIgnoreCase, UserTypeTest.Men)]
+    [DataRow("men", StringComparison.OrdinalIgnoreCase, UserTypeTest.Men)]
+    [DataRow("MEN", StringComparison.OrdinalIgnoreCase, UserTypeTest.Men)]
+    [DataRow("Women", StringComparison.OrdinalIgnoreCase, UserTypeTest.Women)]
+    [DataRow("women", StringComparison.OrdinalIgnoreCase, UserTypeTest.Women)]
+    [DataRow("WOMEN", StringComparison.OrdinalIgnoreCase, UserTypeTest.Women)]
+    [DataRow("None", StringComparison.OrdinalIgnoreCase, UserTypeTest.None)]
+    [DataRow("none", StringComparison.OrdinalIgnoreCase, UserTypeTest.None)]
+    [DataRow("NONE", StringComparison.OrdinalIgnoreCase, UserTypeTest.None)]
+    public void TryParseFast_IgnoreCase_ReturnsCorrectResult(string input, StringComparison comparisonType, UserTypeTest expected)
+    {
+        // Act
+        bool success = UserTypeTestEnumExtensions.TryParseFast(input, out UserTypeTest result, comparisonType);
+
+        // Assert
+        Assert.IsTrue(success);
+        Assert.AreEqual(expected, result);
+    }
+
+    [DataTestMethod]
+    [DataRow("Men", StringComparison.Ordinal, UserTypeTest.Men)]
+    [DataRow("Women", StringComparison.Ordinal, UserTypeTest.Women)]
+    [DataRow("None", StringComparison.Ordinal, UserTypeTest.None)]
+    public void TryParseFast_Ordinal_ReturnsCorrectResult(string input, StringComparison comparisonType, UserTypeTest expected)
+    {
+        // Act
+        bool success = UserTypeTestEnumExtensions.TryParseFast(input, out UserTypeTest result, comparisonType);
+
+        // Assert
+        Assert.IsTrue(success);
+        Assert.AreEqual(expected, result);
+    }
+
+    [DataTestMethod]
+    [DataRow("men", StringComparison.Ordinal)]
+    [DataRow("MEN", StringComparison.Ordinal)]
+    [DataRow("women", StringComparison.Ordinal)]
+    [DataRow("WOMEN", StringComparison.Ordinal)]
+    [DataRow("none", StringComparison.Ordinal)]
+    [DataRow("NONE", StringComparison.Ordinal)]
+    public void TryParseFast_Ordinal_CaseSensitive_Fails(string input, StringComparison comparisonType)
+    {
+        // Act
+        bool success = UserTypeTestEnumExtensions.TryParseFast(input, out UserTypeTest result, comparisonType);
+
+        // Assert
+        Assert.IsFalse(success);
+        Assert.AreEqual(default(UserTypeTest), result);
+    }
+
     private UserTypeTest GetUndefinedEnumValue() => (UserTypeTest)(-1);
 }
