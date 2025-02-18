@@ -8,6 +8,7 @@ using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Running;
+using CommandLine;
 using EnumFastToStringGenerated;
 using Perfolizer.Horology;
 using System;
@@ -154,6 +155,31 @@ public class EnumBenchmark
     {
         return UserTypeEnumExtensions.TryParseFast("Men",out _);
     }
+
+    [Benchmark]
+    public void Parse_CaseSensitive_Ordinal()
+    {
+        UserTypeEnumExtensions.TryParseFast("Men", out _, StringComparison.Ordinal);
+    }
+
+    [Benchmark]
+    public void Parse_CaseInsensitive_Ordinal()
+    {
+        UserTypeEnumExtensions.TryParseFast("men", out _, StringComparison.Ordinal);
+    }
+
+    [Benchmark]
+    public void Parse_CaseSensitive_OrdinalIgnoreCase()
+    {
+        UserTypeEnumExtensions.TryParseFast("Men", out _, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Benchmark]
+    public void Parse_CaseInsensitive_OrdinalIgnoreCase()
+    {
+        UserTypeEnumExtensions.TryParseFast("men", out _, StringComparison.OrdinalIgnoreCase);
+    }
+
 }
 
 public static class Ext
