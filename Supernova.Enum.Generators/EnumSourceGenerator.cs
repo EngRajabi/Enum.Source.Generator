@@ -80,6 +80,8 @@ namespace {SourceGeneratorHelper.NameSpace}
             /**********************/
             var enumDisplayNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             var enumDescriptions = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var enumShortNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
             foreach (var member in enumSymbol.GetMembers())
             {
                 if (member is not IFieldSymbol field
@@ -103,7 +105,11 @@ namespace {SourceGeneratorHelper.NameSpace}
                         {
                             enumDescriptions.Add(member.Name, description);
                         }
-
+                        if (namedArgument.Key.Equals("ShortName", StringComparison.OrdinalIgnoreCase) &&
+                         namedArgument.Value.Value?.ToString() is { } shortName)
+                        {
+                            enumShortNames.Add(member.Name, shortName);
+                        }
                     }
                 }
             }
@@ -126,6 +132,9 @@ namespace {SourceGeneratorHelper.NameSpace}
             //DisplayNames Dictionary
             DisplayNamesDictionary(sourceBuilder, symbol, e, enumDisplayNames);
 
+            //DisplayShortNames Dictionary
+            DisplayShortNamesDictionary(sourceBuilder, symbol, e, enumShortNames);
+
             //DisplayDescriptions Dictionary
             DisplayDescriptionsDictionary(sourceBuilder, symbol, e, enumDescriptions);
 
@@ -143,6 +152,9 @@ namespace {SourceGeneratorHelper.NameSpace}
 
             //ToDisplay string
             ToDescription(sourceBuilder, symbol, e, enumDescriptions);
+
+            //ToShortName
+            ToShortName(sourceBuilder, symbol, e, enumShortNames);
 
             //GetValues
             GetValuesFast(sourceBuilder, symbol, e);
@@ -190,6 +202,37 @@ namespace {SourceGeneratorHelper.NameSpace}
                 : key;
             sourceBuilder.AppendLine(
                 $@"                {symbol}.{member.Identifier.ValueText} => ""{enumDisplayName ?? key}"",");
+        }
+
+        sourceBuilder.Append(
+            @"                _ => defaultValue ?? throw new ArgumentOutOfRangeException(nameof(states), states, null)
+            };
+        }
+");
+    }
+
+    private static void ToShortName(StringBuilder sourceBuilder, ISymbol symbol, EnumDeclarationSyntax e, Dictionary<string, string> enumShortNames)
+    {
+        sourceBuilder.Append($@"
+        /// <summary>
+        /// Converts the <see cref=""global::{symbol.FullName()}"" /> enumeration value to its short name string.
+        /// </summary>
+        /// <param name=""states"">The <see cref=""global::{symbol.FullName()}"" /> enumeration value.</param>
+        /// <param name=""defaultValue"">The default value to return if the enumeration value is not recognized.</param>
+        /// <returns>The short name string of the <see cref=""global::{symbol.FullName()}"" /> value.</returns>
+        public static string {SourceGeneratorHelper.ExtensionMethodNameToShortName}(this {symbol.FullName()} states, string defaultValue = null)
+        {{
+            return states switch
+            {{
+");
+        foreach (var member in e.Members)
+        {
+            var key = member.Identifier.ValueText;
+            var enumShortName = enumShortNames.TryGetValue(key, out var found)
+                ? found
+                : key;
+            sourceBuilder.AppendLine(
+                $@"                {symbol}.{member.Identifier.ValueText} => ""{enumShortName}"",");
         }
 
         sourceBuilder.Append(
@@ -341,6 +384,31 @@ namespace {SourceGeneratorHelper.NameSpace}
                 : key;
             sourceBuilder.AppendLine(
                 $@"                {{{symbol.FullName()}.{member.Identifier.ValueText}, ""{enumDescription ?? key}""}},");
+        }
+        sourceBuilder.Append(
+            @"
+        }.ToImmutableDictionary();
+");
+    }
+
+    private static void DisplayShortNamesDictionary(StringBuilder sourceBuilder, ISymbol symbol, EnumDeclarationSyntax e,
+        Dictionary<string, string> enumShortNames)
+    {
+        sourceBuilder.Append($@"
+        /// <summary>
+        /// Provides a dictionary that maps <see cref=""global::{symbol.FullName()}"" /> values to their corresponding short names.
+        /// </summary>
+        public static readonly ImmutableDictionary<{symbol.FullName()}, string> {SourceGeneratorHelper.PropertyDisplayShortNamesDictionary} = new Dictionary<{symbol.FullName()}, string>
+        {{
+");
+        foreach (var member in e.Members)
+        {
+            var key = member.Identifier.ValueText;
+            var enumShortName = enumShortNames.TryGetValue(key, out var found)
+                ? found
+                : key;
+            sourceBuilder.AppendLine(
+                $@"                {{{symbol}.{member.Identifier.ValueText}, ""{enumShortName}""}},");
         }
         sourceBuilder.Append(
             @"

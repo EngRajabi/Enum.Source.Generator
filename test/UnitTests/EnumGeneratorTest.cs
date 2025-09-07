@@ -10,9 +10,9 @@ namespace UnitTests;
 [EnumGenerator]
 public enum UserTypeTest
 {
-    [Display(Name = "مرد", Description = "Descمرد")] Men = 3,
+    [Display(Name = "مرد", Description = "Descمرد", ShortName = "M")] Men = 3,
 
-    [Display(Name = "زن", Description = "Descزن")] Women = 4,
+    [Display(Name = "زن", Description = "Descزن", ShortName = "W")] Women = 4,
 
     //[Display(Name = "نامشخص")]
     None
@@ -118,6 +118,32 @@ public class EnumGeneratorTest
     }
 
     [TestMethod]
+    public void TestEnumToShortName()
+    {
+        var menShortName = UserTypeTest.Men.ToShortNameFast();
+        var womenShortName = UserTypeTest.Women.ToShortNameFast();
+        var noneShortName = UserTypeTest.None.ToShortNameFast();
+
+        menShortName.Should().Be("M");
+        womenShortName.Should().Be("W");
+        noneShortName.Should().Be("None");
+    }
+
+    [TestMethod]
+    public void TestEnumToShortName_Undefined()
+    {
+        var action = () => GetUndefinedEnumValue().ToShortNameFast();
+        action.Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [TestMethod]
+    public void TestEnumToShortName_Undefined_DefaultValue()
+    {
+        var value = GetUndefinedEnumValue().ToShortNameFast("DefaultValue");
+        value.Should().Be("DefaultValue");
+    }
+
+    [TestMethod]
     public void TestEnumGetNames()
     {
         var names = UserTypeTestEnumExtensions.GetNamesFast();
@@ -139,6 +165,20 @@ public class EnumGeneratorTest
             .And.ContainInOrder(
                 new KeyValuePair<UserTypeTest, string>(UserTypeTest.Men, "مرد"),
                 new KeyValuePair<UserTypeTest, string>(UserTypeTest.Women, "زن"),
+                new KeyValuePair<UserTypeTest, string>(UserTypeTest.None, "None")
+            );
+    }
+
+    [TestMethod]
+    public void TestEnumDisplayShortNamesDictionary()
+    {
+        var names = UserTypeTestEnumExtensions.DisplayShortNamesDictionary;
+        Assert.IsNotNull(names);
+        names.Should().NotBeEmpty()
+            .And.HaveCount(3)
+            .And.ContainInOrder(
+                new KeyValuePair<UserTypeTest, string>(UserTypeTest.Men, "M"),
+                new KeyValuePair<UserTypeTest, string>(UserTypeTest.Women, "W"),
                 new KeyValuePair<UserTypeTest, string>(UserTypeTest.None, "None")
             );
     }

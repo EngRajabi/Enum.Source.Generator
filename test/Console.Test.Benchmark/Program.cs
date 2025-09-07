@@ -21,9 +21,9 @@ namespace Console.Test.Benchmark;
 [EnumGenerator]
 public enum UserType
 {
-    [Display(Name = "مرد", Description = "men")] Men,
+    [Display(Name = "مرد", Description = "men", ShortName = "M")] Men,
 
-    [Display(Name = "زن", Description = "women")] Women,
+    [Display(Name = "زن", Description = "women", ShortName = "W")] Women,
 
     //[Display(Name = "نامشخص")]
     None
@@ -95,6 +95,18 @@ public class EnumBenchmark
     public string FastToDisplay()
     {
         return UserType.Men.ToDisplayFast();
+    }
+
+    [Benchmark]
+    public string NativeToShortName()
+    {
+        return UserType.Men.ToShortNameNative();
+    }
+
+    [Benchmark]
+    public string FastToShortName()
+    {
+        return UserType.Men.ToShortNameFast();
     }
 
     [Benchmark]
@@ -173,6 +185,19 @@ public static class Ext
 
         return propValue?.ToString();
     }
+
+    public static string ToShortNameNative(this Enum value)
+    {
+        if (value is null)
+            throw new ArgumentNullException(nameof(value));
+        var attribute = value.GetType().GetField(value.ToString())?
+            .GetCustomAttributes<DisplayAttribute>(false).FirstOrDefault();
+        if (attribute == null)
+            return value.ToString();
+        var propValue = attribute.GetType().GetProperty(ShortNameProperty)?.GetValue(attribute, null);
+        return propValue?.ToString();
+    }
+
     public static string ToDescriptionNative(this Enum value)
     {
         if (value is null)

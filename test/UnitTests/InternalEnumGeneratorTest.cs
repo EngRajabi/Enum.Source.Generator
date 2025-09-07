@@ -10,9 +10,9 @@ namespace UnitTests;
 [EnumGenerator]
 internal enum InternalUserTypeTest
 {
-    [Display(Name = "مرد", Description = "Descمرد")] Men = 3,
+    [Display(Name = "مرد", Description = "Descمرد", ShortName = "M")] Men = 3,
 
-    [Display(Name = "زن", Description = "Descزن")] Women = 4,
+    [Display(Name = "زن", Description = "Descزن", ShortName = "W")] Women = 4,
 
     //[Display(Name = "نامشخص")]
     None
@@ -118,6 +118,32 @@ public class InternalEnumGeneratorTest
     }
 
     [TestMethod]
+    public void TestEnumToShortName()
+    {
+        var menShortName = InternalUserTypeTest.Men.ToShortNameFast();
+        var womenShortName = InternalUserTypeTest.Women.ToShortNameFast();
+        var noneShortName = InternalUserTypeTest.None.ToShortNameFast();
+
+        menShortName.Should().Be("M");
+        womenShortName.Should().Be("W");
+        noneShortName.Should().Be("None");
+    }
+
+    [TestMethod]
+    public void TestEnumToShortName_Undefined()
+    {
+        var action = () => GetUndefinedEnumValue().ToShortNameFast();
+        action.Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [TestMethod]
+    public void TestEnumToShortName_Undefined_DefaultValue()
+    {
+        var value = GetUndefinedEnumValue().ToShortNameFast("DefaultValue");
+        value.Should().Be("DefaultValue");
+    }
+
+    [TestMethod]
     public void TestEnumGetNames()
     {
         var names = InternalUserTypeTestEnumExtensions.GetNamesFast();
@@ -139,6 +165,20 @@ public class InternalEnumGeneratorTest
             .And.ContainInOrder(
                 new KeyValuePair<InternalUserTypeTest, string>(InternalUserTypeTest.Men, "مرد"),
                 new KeyValuePair<InternalUserTypeTest, string>(InternalUserTypeTest.Women, "زن"),
+                new KeyValuePair<InternalUserTypeTest, string>(InternalUserTypeTest.None, "None")
+            );
+    }
+
+    [TestMethod]
+    public void TestEnumDisplayShortNamesDictionary()
+    {
+        var names = InternalUserTypeTestEnumExtensions.DisplayShortNamesDictionary;
+        Assert.IsNotNull(names);
+        names.Should().NotBeEmpty()
+            .And.HaveCount(3)
+            .And.ContainInOrder(
+                new KeyValuePair<InternalUserTypeTest, string>(InternalUserTypeTest.Men, "M"),
+                new KeyValuePair<InternalUserTypeTest, string>(InternalUserTypeTest.Women, "W"),
                 new KeyValuePair<InternalUserTypeTest, string>(InternalUserTypeTest.None, "None")
             );
     }
